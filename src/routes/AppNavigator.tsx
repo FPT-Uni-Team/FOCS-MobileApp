@@ -2,9 +2,9 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from '../pages/auth/LoginScreen';
 import WelcomeScreen from '../pages/welcome/WelcomeScreen';
-import HomeScreen from '../pages/home/HomeScreen';
 import useAuth from '../hooks/useAuth';
 import { ActivityIndicator, View } from 'react-native';
+import TableListScreen from '../pages/table/TableListScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,11 +37,11 @@ const AppNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {isAuthenticated ? (
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Tables" component={TableListScreen} />
       ) : (
         <>
-          <Stack.Screen name="Welcome" component={WelcomeWrapper} />
-          <Stack.Screen name="Login" component={LoginWrapper} />
+          <Stack.Screen key="Welcome" name="Welcome" component={WelcomeWrapper} />
+          <Stack.Screen key="Login" name="Login" component={LoginWrapper} />
         </>
       )}
     </Stack.Navigator>
@@ -49,3 +49,4 @@ const AppNavigator = () => {
 };
 
 export default AppNavigator;
+ 
