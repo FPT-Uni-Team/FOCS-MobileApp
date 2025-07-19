@@ -44,7 +44,7 @@ const notificationSlice = createSlice({
       state.unreadCount = 0;
     },
 
-    connectRequest: (state, _action: PayloadAction<{ staffId: string; storeId: string }>) => {
+    connectRequest: (state) => {
       state.connectionState = 'connecting';
     },
     connectSuccess: (state) => {
