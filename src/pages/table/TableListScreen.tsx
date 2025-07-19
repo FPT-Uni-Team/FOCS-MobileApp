@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, StyleSheet, FlatList, RefreshControl, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, FlatList, RefreshControl, ActivityIndicator, Modal } from 'react-native';
 import {  Menu, IconButton, Text, Surface } from 'react-native-paper';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
@@ -10,11 +10,14 @@ import TableCard from '../../components/common/Table/TableCard';
 import BottomNav from '../../components/common/BottomNav/BottomNav';
 import useAuth from '../../hooks/useAuth';
 import Pagination from '../../components/common/Pagination/Pagination';
+import NotificationBell from '../../components/notification/NotificationBell/NotificationBell';
+import NotificationScreen from '../notification/NotificationScreen';
 
 const TableListScreen = () => {
   const dispatch = useAppDispatch();
   const { logout } = useAuth();
   const [userMenuVisible, setUserMenuVisible] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
   
   const {
     items,
@@ -30,12 +33,13 @@ const TableListScreen = () => {
   useEffect(() => {
     if (!storeId) {
       dispatch(setTableParams({ storeId: STORE_ID }));
+    } else {
+      dispatch(tableListRequest());
     }
-    dispatch(tableListRequest({ storeId: STORE_ID, page, page_size }));
-  }, [dispatch, page, page_size, storeId]);
+  }, [dispatch, storeId]);
 
   const handleRefresh = useCallback(() => {
-    dispatch(setTableParams({ page: 1 }));
+    dispatch(tableListRequest());
   }, [dispatch]);
 
   const handlePageChange = (newPage: number) => {
@@ -55,12 +59,23 @@ const TableListScreen = () => {
 
   return (
     <View style={styles.screenContainer}>
+      <Modal
+        visible={showNotifications}
+        animationType="slide"
+        onRequestClose={() => setShowNotifications(false)}
+      >
+        <NotificationScreen onBackPress={() => setShowNotifications(false)} />
+      </Modal>
+
       <View style={styles.mainContent}>
         <View style={styles.header}>
           <Text variant="headlineSmall" style={styles.headerTitle}>
             Table List
           </Text>
           <View style={styles.headerActions}>
+            <NotificationBell 
+              onPress={() => setShowNotifications(true)}
+            />
             <Menu
               visible={userMenuVisible}
               onDismiss={() => setUserMenuVisible(false)}
@@ -96,8 +111,8 @@ const TableListScreen = () => {
         <Surface style={styles.contentArea}>
             <FlatList
               data={items}
-              renderItem={({ item }) => <TableCard key={item.tableId} item={item} />}
-              keyExtractor={(item, index) => `${item.tableId}-${index}`}
+              renderItem={({ item }) => <TableCard item={item} />}
+              keyExtractor={(item) => item.tableId}
               numColumns={2}
               contentContainerStyle={styles.listContent}
               columnWrapperStyle={{ justifyContent: 'space-between' }}

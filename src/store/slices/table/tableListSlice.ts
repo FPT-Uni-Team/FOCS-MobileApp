@@ -24,10 +24,17 @@ const tableListSlice = createSlice({
   name: 'tableList',
   initialState,
   reducers: {
-    tableListRequest(state, action: PayloadAction<TableListParams>) {
+    setTableParams(state, action: PayloadAction<Partial<TableListParams>>) {
+      if (action.payload.page !== undefined) state.page = action.payload.page;
+      if (action.payload.page_size !== undefined)
+        state.page_size = action.payload.page_size;
+      if (action.payload.storeId !== undefined)
+        state.storeId = action.payload.storeId;
+      state.loading = true;
+    },
+    tableListRequest(state) {
       state.loading = true;
       state.error = null;
-      state.page = action.payload.page;
     },
     tableListSuccess(
       state,
@@ -40,13 +47,6 @@ const tableListSlice = createSlice({
     tableListFailure(state, action: PayloadAction<{ error: string }>) {
       state.error = action.payload.error;
       state.loading = false;
-    },
-    setTableParams(state, action: PayloadAction<Partial<TableListState>>) {
-      const { filters, ...rest } = action.payload;
-      if (filters !== undefined) {
-        state.filters = filters;
-      }
-      Object.assign(state, rest);
     },
     clearTableState: () => initialState,
   },
