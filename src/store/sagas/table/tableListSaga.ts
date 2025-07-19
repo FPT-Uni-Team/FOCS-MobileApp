@@ -1,19 +1,27 @@
-import { call, put, takeLatest, debounce, select } from 'redux-saga/effects';
+import { call, put, takeLatest, select } from 'redux-saga/effects';
 import {
   tableListRequest,
   tableListSuccess,
   tableListFailure,
-  setTableParams,
 } from '../../slices/table/tableListSlice';
 import { fetchTableList } from '../../../services/tableService';
-import type { PayloadAction } from '@reduxjs/toolkit';
+import type { RootState } from '../../store';
 import type { TableListParams } from '../../../type/table/table';
 
-function* handleFetch(
-  action: PayloadAction<TableListParams>
-): Generator<any, void, any> {
+function* handleFetch(): Generator<any, void, any> {
   try {
-    const { data } = yield call(fetchTableList, action.payload);
+    const params: TableListParams = yield select((state: RootState) => ({
+      storeId: state.tableList.storeId,
+      page: state.tableList.page,
+      page_size: state.tableList.page_size,
+    }));
+
+    if (!params.storeId) {
+        // You could dispatch a failure action here if storeId is mandatory
+        return; 
+    }
+
+    const { data } = yield call(fetchTableList, params);
     const mappedItems = data.items.map((it: any) => ({
       tableId: it.id,
       tableNumber: String(it.table_number),
@@ -34,24 +42,6 @@ function* handleFetch(
   }
 }
 
-function* handleParamsChange(): Generator<any, void, any> {
-  const state: any = yield select((s) => s.tableList);
-  const { storeId, page, page_size, search_by, search_value, sort_by, sort_order, filters } = state;
-  if (!storeId) return;
-  const params: TableListParams = {
-    storeId,
-    page,
-    page_size,
-    search_by,
-    search_value,
-    sort_by,
-    sort_order,
-    filters,
-  };
-  yield put(tableListRequest(params));
-}
-
 export default function* tableListSaga() {
-  yield takeLatest(tableListRequest.type, handleFetch);
-  yield debounce(300, setTableParams.type, handleParamsChange);
+  yield takeLatest([tableListRequest.type, 'tableList/setTableParams'], handleFetch);
 } 
