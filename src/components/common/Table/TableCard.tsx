@@ -3,7 +3,7 @@ import { View, StyleSheet, Dimensions } from 'react-native';
 import { Card, Text, IconButton } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import type { TableDTO } from '../../../type/table/table';
-import StatusChip from '../Status/StatusChip';
+import StatusDot from '../StatusDot/StatusDot';
 
 interface Props {
   item: TableDTO;
@@ -24,7 +24,7 @@ const TableCard: React.FC<Props> = ({ item, onPress }) => {
   return (
     <Card style={[styles.card, { height: cardWidth }]} onPress={handlePress}>
       <View style={styles.cardHeader}>
-        <StatusChip status={item.status} />
+        <StatusDot status={item.status} />
         <IconButton icon="dots-vertical" size={20} onPress={() => {}} style={styles.menuButton} />
       </View>
       <View style={styles.cardBody}>

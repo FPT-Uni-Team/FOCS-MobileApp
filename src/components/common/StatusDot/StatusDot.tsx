@@ -2,12 +2,12 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 
-interface Props {
+interface StatusDotProps {
   status: 'ACTIVE' | 'INACTIVE' | 'OCCUPIED';
   size?: number;
 }
 
-const StatusChip: React.FC<Props> = ({ status, size = 12 }) => {
+const StatusDot: React.FC<StatusDotProps> = ({ status, size = 12 }) => {
   const theme = useTheme();
 
   const colors: Record<string, string> = {
@@ -37,4 +37,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default StatusChip; 
+export default StatusDot; 
