@@ -5,6 +5,7 @@ import rootSaga from './sagas/rootSaga';
 import tableListReducer from './slices/table/tableListSlice';
 import notificationReducer from './slices/notification/notificationSlice';
 import menuItemReducer from './slices/menuItem/menuItemSlice';
+import menuItemDetailReducer from './slices/menuItem/menuItemDetailSlice';
 import { signalrInstance } from '../services/signalrService';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -15,6 +16,7 @@ export const store = configureStore({
     tableList: tableListReducer,
     notification: notificationReducer,
     menuItem: menuItemReducer,
+    menuItemDetail: menuItemDetailReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
