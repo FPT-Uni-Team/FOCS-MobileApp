@@ -1,6 +1,11 @@
 import type { ListPageParams } from '../common/common';
 
-export type TableStatus = 'ACTIVE' | 'INACTIVE';
+export type TableStatus =
+  | 'Available'
+  | 'Occupied'
+  | 'Reserved'
+  | 'Cleaning'
+  | 'OutOfService';
 
 export interface TableDTO {
   tableId: string;

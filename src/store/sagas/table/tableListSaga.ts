@@ -7,6 +7,7 @@ import {
 import { fetchTableList } from '../../../services/tableService';
 import type { RootState } from '../../store';
 import type { TableListParams } from '../../../type/table/table';
+import type { TableStatus } from '../../../type/table/table';
 
 function* handleFetch(): Generator<any, void, any> {
   try {
@@ -17,7 +18,7 @@ function* handleFetch(): Generator<any, void, any> {
     }));
 
     if (!params.storeId) {
-        // You could dispatch a failure action here if storeId is mandatory
+       
         return; 
     }
 
@@ -25,7 +26,8 @@ function* handleFetch(): Generator<any, void, any> {
     const mappedItems = data.items.map((it: any) => ({
       tableId: it.id,
       tableNumber: String(it.table_number),
-      status: it.is_active ? 'ACTIVE' : 'INACTIVE',
+     
+      status: mapTableStatus(it.status),
       capacity: it.capacity ?? undefined,
       note: it.note ?? undefined,
       createdAt: it.created_at ?? '',
@@ -39,6 +41,18 @@ function* handleFetch(): Generator<any, void, any> {
         error: e?.response?.data?.message || e.message || 'Error',
       })
     );
+  }
+}
+
+
+function mapTableStatus(apiStatus: number): TableStatus {
+  switch (apiStatus) {
+    case 0: return 'Available';
+    case 1: return 'Occupied';
+    case 2: return 'Reserved';
+    case 3: return 'Cleaning';
+    case 4: return 'OutOfService';
+    default: return 'Available';
   }
 }
 
