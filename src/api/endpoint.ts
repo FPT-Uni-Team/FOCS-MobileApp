@@ -1,3 +1,5 @@
+
+
 const endpoints = {
   auth: {
     login: () => '/api/me/login',
@@ -9,6 +11,11 @@ const endpoints = {
   },
   menuItem: {
     list: () => '/api/admin/menu-item/list',
+    detail: (itemId: string) => `/api/admin/menu-item/${itemId}`,
+    images: (itemId: string) => `/api/admin/menu-item/${itemId}/images`,
+    variantGroups: (itemId: string) => `/api/admin/menu-item/${itemId}/variant-groups`,
+    categories: (itemId: string) => `/api/menu-item-category/menu-item/${itemId}/categories`,
+    changeStatus: (action: string, itemId: string) => `/api/admin/menu-item/${action}/${itemId}`,
   },
 };
 

@@ -10,6 +10,7 @@ import MenuItemListScreen from '../pages/menu/MenuItemListScreen';
 import NotificationScreen from '../pages/notification/NotificationScreen';
 import UserProfileScreen from '../pages/profile/UserProfileScreen';
 import BottomNav from '../components/common/BottomNav/BottomNav';
+import MenuItemDetailScreen from '../pages/menu/MenuItemDetailScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -89,7 +90,10 @@ const AppNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {isAuthenticated ? (
-        <Stack.Screen name="MainApp" component={MainAppTabs} />
+        <>
+          <Stack.Screen name="MainApp" component={MainAppTabs} />
+          <Stack.Screen name="MenuItemDetail" component={MenuItemDetailScreen} options={{ headerShown: false }} />
+        </>
       ) : (
         <>
           <Stack.Screen key="Welcome" name="Welcome" component={WelcomeWrapper} />

@@ -14,6 +14,15 @@ import type {
   ListPageResponse,
 } from '../../../type/common/common';
 import type { MenuListDataType } from '../../../type/menu/menu';
+import {
+  fetchMenuItemDetailStart,
+  fetchMenuItemDetailSuccess,
+  fetchMenuItemDetailFailed,
+} from '../../slices/menuItem/menuItemDetailSlice';
+import { changeStatusMenuItemStart } from '../../actions/menuItemAction';
+import type { MenuItem } from '../../../type/menu/menu';
+import type { VariantGroup } from '../../../type/variant/variant';
+import type { CategoryListDataType } from '../../../type/category/category';
 
 function* fetchMenuItemList(
   action: PayloadAction<ListPageParams>,
@@ -30,6 +39,47 @@ function* fetchMenuItemList(
   }
 }
 
+function* fetchMenuItemDetail(
+  action: PayloadAction<string>,
+): Generator<any, void, AxiosResponse<any>> {
+  try {
+    const response = yield call(menuItemService.menuItemDetail, action.payload);
+    const menuItemDetailData = response.data as MenuItem;
+
+    const responseImage = yield call(menuItemService.menuItemImage, action.payload);
+    menuItemDetailData.images = responseImage.data as [];
+
+    const responseVariantGroups = yield call(menuItemService.menuItemGroups, action.payload);
+    menuItemDetailData.variant_groups = responseVariantGroups.data as VariantGroup[];
+
+    const responseCategory = yield call(menuItemService.menuItemCategory, action.payload);
+    menuItemDetailData.categories = responseCategory.data as CategoryListDataType[];
+
+    yield put(fetchMenuItemDetailSuccess(menuItemDetailData));
+  } catch (error: any) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'Failed to fetch menu item detail';
+    yield put(fetchMenuItemDetailFailed(errorMessage));
+  }
+}
+
+function* changeStatusWorker(
+  action: ReturnType<typeof changeStatusMenuItemStart>,
+): Generator<any, void, any> {
+  const { category, menuItemId } = action.payload;
+  const status = category === 'deactive' ? 'disable' : 'enable';
+
+  try {
+    yield call(menuItemService.changeStatus, status, menuItemId);
+    yield put(fetchMenuItemDetailStart(menuItemId));
+  } catch (error) {
+    console.error('Change status error:', error);
+    yield put(fetchMenuItemDetailFailed('Failed to change status'));
+  }
+}
+
 export default function* menuItemSaga() {
   yield takeLatest(fetchMenuItemsStart.type, fetchMenuItemList);
+  yield takeLatest(fetchMenuItemDetailStart.type, fetchMenuItemDetail);
+  yield takeLatest(changeStatusMenuItemStart.type, changeStatusWorker);
 } 
