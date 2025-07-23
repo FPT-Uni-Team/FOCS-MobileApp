@@ -4,6 +4,7 @@ import tableListSaga from './table/tableListSaga';
 import notificationSaga from './notification/notificationSaga';
 import soundSaga from './sound/soundSaga';
 import localNotificationSaga from './notification/localNotificationSaga';
+import menuItemSaga from './menu/menuItemSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -12,5 +13,6 @@ export default function* rootSaga() {
     fork(notificationSaga),
     fork(soundSaga),
     fork(localNotificationSaga),
+    fork(menuItemSaga),
   ]);
 }

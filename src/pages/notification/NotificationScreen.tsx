@@ -1,15 +1,15 @@
 import React from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
-import { Appbar, Text, Divider } from 'react-native-paper';
+import { Text, Divider, Appbar } from 'react-native-paper';
 import { useAppSelector, useAppDispatch } from '../../hooks/redux';
 import { markAllAsRead } from '../../store/slices/notification/notificationSlice';
 import { StaffNotification } from '../../type/notification/notification';
+import AppHeader from '../../components/common/AppHeader/AppHeader';
+import EmptyState from '../../components/common/EmptyState/EmptyState';
+import Colors from '../../utils/Colors';
+import { spacing, typography } from '../../utils/theme';
 
-interface NotificationScreenProps {
-  onBackPress: () => void;
-}
-
-const NotificationScreen: React.FC<NotificationScreenProps> = ({ onBackPress }) => {
+const NotificationScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const notifications = useAppSelector((state) => state.notification.notifications);
 
@@ -21,19 +21,36 @@ const NotificationScreen: React.FC<NotificationScreenProps> = ({ onBackPress }) 
     </View>
   );
 
+  const headerActions = notifications.length > 0 ? [
+    <Appbar.Action 
+      key="mark-all-read"
+      icon="email-open" 
+      onPress={() => dispatch(markAllAsRead())}
+      iconColor={Colors.primary}
+    />
+  ] : [];
+
+  const renderEmptyState = () => (
+    <EmptyState 
+      icon="bell-off" 
+      title="No notifications" 
+      subtitle="You're all caught up!"
+    />
+  );
+
   return (
     <View style={styles.container}>
-      <Appbar.Header>
-        <Appbar.BackAction onPress={onBackPress} />
-        <Appbar.Content title="Notifications" />
-        <Appbar.Action icon="email-open" onPress={() => dispatch(markAllAsRead())} />
-      </Appbar.Header>
+      <AppHeader 
+        title="Notifications" 
+        actions={headerActions}
+      />
+
       <FlatList
         data={notifications}
         renderItem={renderNotification}
         keyExtractor={(item) => item.id}
         ItemSeparatorComponent={() => <Divider />}
-        ListEmptyComponent={<Text style={styles.emptyText}>No notifications</Text>}
+        ListEmptyComponent={renderEmptyState}
       />
     </View>
   );
@@ -42,46 +59,40 @@ const NotificationScreen: React.FC<NotificationScreenProps> = ({ onBackPress }) 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: Colors.backgroundSecondary,
   },
   notificationItem: {
-    padding: 16,
-    backgroundColor: 'white',
-    marginHorizontal: 16,
-    marginVertical: 8,
-    borderRadius: 12,
+    padding: spacing.l,
+    backgroundColor: Colors.backgroundPrimary,
+    marginHorizontal: spacing.l,
+    marginVertical: spacing.s,
+    borderRadius: spacing.m,
     elevation: 2,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
   },
   unread: {
-    backgroundColor: '#EEF2FF',
+    backgroundColor: Colors.chipBackground,
     borderLeftWidth: 4,
-    borderLeftColor: '#3B82F6',
+    borderLeftColor: Colors.primary,
   },
   title: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#111827',
-    marginBottom: 8,
+    fontSize: typography.sizes.lg,
+    fontWeight: typography.weights.semibold,
+    color: Colors.textPrimary,
+    marginBottom: spacing.s,
   },
   message: {
-    fontSize: 14,
-    color: '#374151',
-    lineHeight: 20,
-    marginBottom: 8,
+    fontSize: typography.sizes.base,
+    color: Colors.textSecondary,
+    lineHeight: typography.sizes.lg * typography.lineHeights.normal,
+    marginBottom: spacing.s,
   },
   timestamp: {
-    fontSize: 12,
-    color: '#6B7280',
-    marginTop: 4,
-  },
-  emptyText: {
-    textAlign: 'center',
-    marginTop: 20,
-    fontSize: 16,
-    color: '#6B7280',
+    fontSize: typography.sizes.sm,
+    color: Colors.textMuted,
+    marginTop: spacing.xs,
   },
 });
 

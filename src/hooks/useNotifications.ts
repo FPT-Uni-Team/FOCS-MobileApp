@@ -9,7 +9,6 @@ import {
   disconnect,
   connectRequest
 } from '../store/slices/notification/notificationSlice';
-import type { NotificationConnectionPayload } from '../type/notification/notification';
 
 const useNotifications = () => {
   const dispatch = useDispatch();
@@ -40,8 +39,8 @@ const useNotifications = () => {
     dispatch(disconnect());
   }, [dispatch]);
 
-  const reconnectNotifications = useCallback((payload: NotificationConnectionPayload) => {
-    dispatch(connectRequest(payload));
+  const reconnectNotifications = useCallback(() => {
+    dispatch(connectRequest());
   }, [dispatch]);
 
   return {

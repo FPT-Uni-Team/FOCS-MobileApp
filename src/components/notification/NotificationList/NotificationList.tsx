@@ -1,8 +1,9 @@
-import React from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import { Card, IconButton, Chip } from 'react-native-paper';
+import React, { memo} from 'react';
+import { View, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, Card, Chip, IconButton } from 'react-native-paper';
+import { StaffNotification } from '../../../type/notification/notification';
 import useNotifications from '../../../hooks/useNotifications';
-import type { StaffNotification } from '../../../type/notification/notification';
+import { getTypeStyle, getPriorityStyle, getTypeIcon, formatTime } from '../../../utils/notification';
 
 interface NotificationItemProps {
   notification: StaffNotification;
@@ -10,67 +11,11 @@ interface NotificationItemProps {
   onDismiss: (id: string) => void;
 }
 
-const getTypeStyle = (type: StaffNotification['type']) => {
-  switch (type) {
-    case 'NEW_ORDER':
-      return { container: { backgroundColor: '#FEF3C7' }, iconColor: '#D97706' };
-    case 'CUSTOMER_REQUEST':
-      return { container: { backgroundColor: '#FFE4E6' }, iconColor: '#E11D48' };
-    case 'TABLE_STATUS':
-      return { container: { backgroundColor: '#FEE2E2' }, iconColor: '#DC2626' };
-    case 'KITCHEN_READY':
-      return { container: { backgroundColor: '#DBEAFE' }, iconColor: '#2563EB' };
-    case 'PAYMENT':
-      return { container: { backgroundColor: '#D1FAE5' }, iconColor: '#059669' };
-    default:
-      return { container: { backgroundColor: '#E5E7EB' }, iconColor: '#4B5563' };
-  }
-};
-
-const getPriorityStyle = (priority: StaffNotification['priority']) => {
-  switch (priority) {
-    case 'URGENT':
-      return { chip: styles.chipUrgent, text: styles.chipTextWhite };
-    case 'HIGH':
-      return { chip: styles.chipHigh, text: styles.chipTextWhite };
-    case 'MEDIUM':
-      return { chip: styles.chipMedium, text: styles.chipTextDark };
-    case 'LOW':
-      return { chip: styles.chipLow, text: styles.chipTextWhite };
-    default:
-      return { chip: {}, text: {} };
-  }
-};
-
 const NotificationItem: React.FC<NotificationItemProps> = ({
   notification,
   onPress,
   onDismiss,
 }) => {
-  const formatTime = (timestamp: string) => {
-    return new Date(timestamp).toLocaleTimeString('vi-VN', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
-  const getTypeIcon = (type: StaffNotification['type']) => {
-    switch (type) {
-      case 'NEW_ORDER':
-        return 'food';
-      case 'CUSTOMER_REQUEST':
-        return 'hand-back-left';
-      case 'KITCHEN_READY':
-        return 'chef-hat';
-      case 'TABLE_STATUS':
-        return 'table-furniture';
-      case 'PAYMENT':
-        return 'cash';
-      default:
-        return 'bell';
-    }
-  };
-
   const typeStyle = getTypeStyle(notification.type);
   const priorityStyle = getPriorityStyle(notification.priority);
 
@@ -168,7 +113,7 @@ const NotificationList: React.FC = () => {
         data={notifications}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <MemoizedNotificationItem
+          <NotificationItem
             notification={item}
             onPress={handleNotificationPress}
             onDismiss={handleDismiss}
@@ -182,9 +127,7 @@ const NotificationList: React.FC = () => {
   );
 };
 
-const MemoizedNotificationItem = React.memo(NotificationItem);
-
-export default React.memo(NotificationList);
+export default memo(NotificationList);
 
 const styles = StyleSheet.create({
   container: {
@@ -283,7 +226,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   dismissButton: {
-    margin: -8, // Reduce touch area visually
+    margin: -8, 
     padding: 0,
   },
   message: {
@@ -292,13 +235,13 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     marginTop: 8,
     marginBottom: 12,
-    marginLeft: 56, // Indent message to align with title
+    marginLeft: 56, 
   },
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginLeft: 56, // Indent footer to align with title
+    marginLeft: 56, 
   },
   priorityChip: {
     height: 22,
@@ -306,32 +249,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
     borderWidth: 0,
     borderRadius: 6,
-  },
-  chipTextWhite: {
-    color: 'white',
-    fontSize: 10,
-    fontWeight: 'bold',
-    marginHorizontal: 8,
-    lineHeight: 12,
-  },
-  chipTextDark: {
-    color: '#422006',
-    fontSize: 10,
-    fontWeight: 'bold',
-    marginHorizontal: 8,
-    lineHeight: 12,
-  },
-  chipUrgent: {
-    backgroundColor: '#EF4444',
-  },
-  chipHigh: {
-    backgroundColor: '#F97316',
-  },
-  chipMedium: {
-    backgroundColor: '#FBBF24',
-  },
-  chipLow: {
-    backgroundColor: '#6B7280',
   },
   unreadDot: {
     width: 8,

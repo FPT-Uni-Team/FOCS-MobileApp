@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Button, Text } from 'react-native-paper';
+import { IconButton, Text } from 'react-native-paper';
+import Colors from '../../../utils/Colors';
 
 interface Props {
   currentPage: number;
@@ -27,27 +28,35 @@ const Pagination: React.FC<Props> = ({ currentPage, totalPages, onPageChange }) 
 
   return (
     <View style={styles.container}>
-      <Button
+      <IconButton
         icon="chevron-left"
-        mode="outlined"
+        size={24}
         onPress={handlePrev}
         disabled={currentPage === 1}
-        style={styles.button}
-      >
-        {''}
-      </Button>
-      <Text style={styles.pageText}>
-        {currentPage} / {totalPages}
-      </Text>
-      <Button
+        style={[
+          styles.button,
+          currentPage === 1 && styles.buttonDisabled
+        ]}
+        iconColor={currentPage === 1 ? Colors.textDisabled : Colors.primary}
+      />
+      
+      <View style={styles.pageInfo}>
+        <Text style={styles.pageNumber}>{currentPage}</Text>
+        <Text style={styles.separator}>of</Text>
+        <Text style={styles.totalPages}>{totalPages}</Text>
+      </View>
+      
+      <IconButton
         icon="chevron-right"
-        mode="outlined"
+        size={24}
         onPress={handleNext}
         disabled={currentPage === totalPages}
-        style={styles.button}
-      >
-        {''}
-      </Button>
+        style={[
+          styles.button,
+          currentPage === totalPages && styles.buttonDisabled
+        ]}
+        iconColor={currentPage === totalPages ? Colors.textDisabled : Colors.primary}
+      />
     </View>
   );
 };
@@ -57,20 +66,49 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 12,
-    borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
-    backgroundColor: '#fff',
-    gap: 24,
-  },
-  pageText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
+    paddingVertical: 8,
+    gap: 16,
   },
   button: {
-    
-  }
+    backgroundColor: Colors.backgroundPrimary,
+    borderRadius: 8,
+    elevation: 1,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  buttonDisabled: {
+    backgroundColor: Colors.backgroundSecondary,
+    elevation: 0,
+  },
+  pageInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.backgroundPrimary,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    elevation: 1,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    gap: 6,
+  },
+  pageNumber: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: Colors.primary,
+  },
+  separator: {
+    fontSize: 14,
+    fontWeight: '400',
+    color: Colors.textSecondary,
+  },
+  totalPages: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: Colors.textPrimary,
+  },
 });
 
 export default Pagination; 

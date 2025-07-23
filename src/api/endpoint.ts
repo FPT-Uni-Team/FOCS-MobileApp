@@ -7,6 +7,9 @@ const endpoints = {
   table: {
     list: (storeId: string) => `/api/manager/tables?storeId=${storeId}`,
   },
+  menuItem: {
+    list: () => '/api/admin/menu-item/list',
+  },
 };
 
 export default endpoints;
