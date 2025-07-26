@@ -85,12 +85,12 @@ export const getPaymentStatusText = (status: PaymentStatus): string => {
 
 export const getOrderStatusColor = (status: OrderStatus): string => {
   switch (status) {
-    case 0: return '#FF9800'; // Pending - Orange
-    case 1: return '#2196F3'; // Confirmed - Blue
-    case 2: return '#9C27B0'; // Preparing - Purple
-    case 3: return '#4CAF50'; // Ready - Green
-    case 4: return '#4CAF50'; // Completed - Green
-    case 5: return '#F44336'; // Cancelled - Red
+    case 0: return '#FF9800'; 
+    case 1: return '#2196F3'; 
+    case 2: return '#9C27B0'; 
+    case 3: return '#4CAF50'; 
+    case 4: return '#4CAF50'; 
+    case 5: return '#F44336'; 
     default: return '#8E8E93';
   }
 }; 
