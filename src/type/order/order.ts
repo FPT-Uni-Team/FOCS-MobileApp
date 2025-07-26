@@ -1,15 +1,13 @@
-import type { OrderDTO } from './order';
-
 export interface OrderDetail {
   id: string;
+  order_id: string;
   menu_item_id: string;
-  menu_item_name: string;
-  variant_id: string;
-  variant_name: string;
   quantity: number;
   unit_price: number;
   total_price: number;
   note?: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface OrderDTO {
@@ -31,9 +29,9 @@ export interface OrderDTO {
   order_details: OrderDetail[];
 }
 
-export type OrderStatus = 0 | 1 | 2 | 3 | 4 | 5;
-export type OrderType = 0 | 1;
-export type PaymentStatus = 0 | 1 | 2;
+export type OrderStatus = 0 | 1 | 2 | 3 | 4 | 5; 
+export type OrderType = 0 | 1; 
+export type PaymentStatus = 0 | 1 | 2; 
 
 export interface OrderListParams {
   page: number;
@@ -55,6 +53,7 @@ export interface OrderListState {
   params: OrderListParams;
 }
 
+// Helper functions
 export const getOrderStatusText = (status: OrderStatus): string => {
   switch (status) {
     case 0: return 'Pending';
@@ -70,7 +69,7 @@ export const getOrderStatusText = (status: OrderStatus): string => {
 export const getOrderTypeText = (type: OrderType): string => {
   switch (type) {
     case 0: return 'Dine-in';
-    case 1: return 'Takeaway';
+    case 1: return 'Take-away';
     default: return 'Unknown';
   }
 };
@@ -86,12 +85,12 @@ export const getPaymentStatusText = (status: PaymentStatus): string => {
 
 export const getOrderStatusColor = (status: OrderStatus): string => {
   switch (status) {
-    case 0: return '#FFA500';
-    case 1: return '#007AFF';
-    case 2: return '#FF6B35';
-    case 3: return '#32D74B';
-    case 4: return '#28A745';
-    case 5: return '#FF3B30';
+    case 0: return '#FF9800'; // Pending - Orange
+    case 1: return '#2196F3'; // Confirmed - Blue
+    case 2: return '#9C27B0'; // Preparing - Purple
+    case 3: return '#4CAF50'; // Ready - Green
+    case 4: return '#4CAF50'; // Completed - Green
+    case 5: return '#F44336'; // Cancelled - Red
     default: return '#8E8E93';
   }
 }; 

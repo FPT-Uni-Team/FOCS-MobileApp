@@ -3,11 +3,12 @@ import { StyleSheet, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 
 interface StatusDotProps {
-  status: 'Available' | 'Occupied' | 'Reserved' | 'Cleaning' | 'OutOfService';
+  status?: 'Available' | 'Occupied' | 'Reserved' | 'Cleaning' | 'OutOfService';
+  color?: string;
   size?: number;
 }
 
-const StatusDot: React.FC<StatusDotProps> = ({ status, size = 12 }) => {
+const StatusDot: React.FC<StatusDotProps> = ({ status, color, size = 12 }) => {
   const theme = useTheme();
 
   const colors: Record<string, string> = {
@@ -18,12 +19,14 @@ const StatusDot: React.FC<StatusDotProps> = ({ status, size = 12 }) => {
     OutOfService: '#F44336',   
   };
 
+  const dotColor = color || (status ? colors[status] : theme.colors.surfaceDisabled);
+
   return (
     <View
       style={[
         styles.dot,
         {
-          backgroundColor: colors[status] || theme.colors.surfaceDisabled,
+          backgroundColor: dotColor,
           width: size,
           height: size,
           borderRadius: size / 2,
