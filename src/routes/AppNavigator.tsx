@@ -6,6 +6,7 @@ import WelcomeScreen from '../pages/welcome/WelcomeScreen';
 import useAuth from '../hooks/useAuth';
 import { ActivityIndicator, View } from 'react-native';
 import TableListScreen from '../pages/table/TableListScreen';
+import OrderListScreen from '../pages/order/OrderListScreen';
 import MenuItemListScreen from '../pages/menu/MenuItemListScreen';
 import NotificationScreen from '../pages/notification/NotificationScreen';
 import UserProfileScreen from '../pages/profile/UserProfileScreen';
@@ -41,6 +42,9 @@ const MainAppTabs = () => (
         case 'Tables':
           selectedKey = 'table';
           break;
+        case 'Orders':
+          selectedKey = 'order';
+          break;
         case 'MenuItems':
           selectedKey = 'menu';
           break;
@@ -58,6 +62,7 @@ const MainAppTabs = () => (
           onSelect={(key) => {
             const screenMap: { [key: string]: string } = {
               'table': 'Tables',
+              'order': 'Orders',
               'menu': 'MenuItems',
               'notification': 'Notifications',
               'profile': 'Profile',
@@ -70,6 +75,7 @@ const MainAppTabs = () => (
     screenOptions={{ headerShown: false }}
   >
     <Tab.Screen name="Tables" component={TableListScreen} />
+    <Tab.Screen name="Orders" component={OrderListScreen} />
     <Tab.Screen name="MenuItems" component={MenuItemListScreen} />
     <Tab.Screen name="Notifications" component={NotificationWrapper} />
     <Tab.Screen name="Profile" component={UserProfileScreen} />

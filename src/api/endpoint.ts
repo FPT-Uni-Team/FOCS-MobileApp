@@ -17,6 +17,9 @@ const endpoints = {
     categories: (itemId: string) => `/api/menu-item-category/menu-item/${itemId}/categories`,
     changeStatus: (action: string, itemId: string) => `/api/admin/menu-item/${action}/${itemId}`,
   },
+  order: {
+    list: () => '/api/cashier/orders',
+  },
 };
 
 export default endpoints;

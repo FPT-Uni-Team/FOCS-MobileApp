@@ -11,6 +11,7 @@ interface MenuItem {
 }
 const MENU: MenuItem[] = [
   { key: 'table', icon: 'table-furniture' },
+  { key: 'order', icon: 'receipt' },
   { key: 'menu', icon: 'silverware-fork-knife' },
   { key: 'notification', icon: 'bell' },
   { key: 'profile', icon: 'account' },
