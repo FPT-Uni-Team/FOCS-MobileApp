@@ -20,8 +20,6 @@ interface OrderListItemProps {
 
 const OrderListItem: React.FC<OrderListItemProps> = ({ item }) => {
   const handlePress = () => {
-    // TODO: Navigate to OrderDetail when needed
-    console.log('Order pressed:', item.order_code);
   };
 
   const formatDateTime = (dateString: string) => {

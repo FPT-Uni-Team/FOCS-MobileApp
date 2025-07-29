@@ -1,7 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL ?? 'https://focs.site';
+const BASE_URL = 'https://focs.site';
 const axiosClient = axios.create({
   baseURL: BASE_URL,
   headers: {
