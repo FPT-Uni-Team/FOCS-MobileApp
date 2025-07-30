@@ -80,8 +80,6 @@ const NotificationList: React.FC = () => {
     if (!notification.isRead) {
       markNotificationAsRead(notification.id);
     }
-    
-    console.log('Notification pressed:', notification);
   };
 
   const handleDismiss = (id: string) => {

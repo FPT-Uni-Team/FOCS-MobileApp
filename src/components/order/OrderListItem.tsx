@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { Text, Surface, Chip } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 import StatusChip from '../common/StatusChip/StatusChip';
 import StatusDot from '../common/StatusDot/StatusDot';
 import { formatPrice } from '../../utils/formatPrice';
@@ -19,9 +20,10 @@ interface OrderListItemProps {
 }
 
 const OrderListItem: React.FC<OrderListItemProps> = ({ item }) => {
+  const navigation = useNavigation<any>();
+  
   const handlePress = () => {
-    // TODO: Navigate to OrderDetail when needed
-    console.log('Order pressed:', item.order_code);
+    navigation.navigate('OrderDetail', { orderId: item.order_code });
   };
 
   const formatDateTime = (dateString: string) => {
