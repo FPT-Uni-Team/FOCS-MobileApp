@@ -1,62 +1,49 @@
-import { call, put, takeLatest, select } from 'redux-saga/effects';
-import { PayloadAction } from '@reduxjs/toolkit';
-import {
-  fetchOrdersStart,
-  fetchOrdersSuccess,
-  fetchOrdersFailure,
+import { call, put, takeLatest } from 'redux-saga/effects';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import type { AxiosResponse } from 'axios';
+import { 
+  fetchOrderListStart, 
+  fetchOrderListSuccess, 
+  fetchOrderListFailure 
 } from '../../slices/order/orderSlice';
-import { fetchOrderList } from '../../../services/orderService';
-import type { RootState } from '../../store';
-import type { OrderListParams, OrderDTO } from '../../../type/order/order';
+import {
+  fetchOrderDetailStart,
+  fetchOrderDetailSuccess,
+  fetchOrderDetailFailed,
+} from '../../slices/order/orderDetailSlice';
+import type { OrderListParams, OrderListResponse, OrderDTO } from '../../../type/order/order';
+import { fetchOrderList, fetchOrderDetail } from '../../../services/orderService';
 
-function* handleFetchOrders(action: PayloadAction<Partial<OrderListParams> | undefined>): Generator<any, void, any> {
+function* fetchOrderListSaga(
+  action: PayloadAction<OrderListParams>,
+): Generator<any, void, AxiosResponse<OrderListResponse>> {
   try {
-    const currentParams: OrderListParams = yield select((state: RootState) => state.order.params);
-    const params: any = {
-      page: action.payload?.page ?? currentParams.page,
-      page_size: action.payload?.page_size ?? currentParams.page_size,
-      search_by: '',
-      search_value: '',
-      sort_by: '',
-      sort_order: '',
-      filters: {},
-    };
-    const { data } = yield call(fetchOrderList, params);
-    const mappedOrders: OrderDTO[] = data.items.map((item: any) => ({
-      id: item.id,
-      order_code: item.order_code,
-      user_id: item.user_id,
-      order_status: item.order_status,
-      order_type: item.order_type,
-      payment_status: item.payment_status,
-      sub_total_amount: item.sub_total_amount,
-      tax_amount: item.tax_amount,
-      discount_amount: item.discount_amount,
-      total_amount: item.total_amount,
-      customer_note: item.customer_note,
-      created_at: item.created_at,
-      created_by: item.created_by,
-      updated_at: item.updated_at,
-      updated_by: item.updated_by,
-      order_details: item.order_details || [],
+    const response = yield call(fetchOrderList, action.payload);
+    yield put(fetchOrderListSuccess({
+      items: response.data.items,
+      total: response.data.total_count,
     }));
-    yield put(
-      fetchOrdersSuccess({
-        items: mappedOrders,
-        total: data.total_count || data.total || 0,
-      })
-    );
-  } catch (error: any) {
-    yield put(
-      fetchOrdersFailure(
-        error?.response?.data?.message || error.message || 'Failed to fetch orders'
-      )
-    );
+  } catch (error: unknown) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'Failed to fetch orders';
+    yield put(fetchOrderListFailure(errorMessage));
   }
 }
 
-export function* orderSaga() {
-  yield takeLatest(fetchOrdersStart.type, handleFetchOrders);
+function* fetchOrderDetailSaga(
+  action: PayloadAction<string>,
+): Generator<any, void, AxiosResponse<OrderDTO>> {
+  try {
+    const response = yield call(fetchOrderDetail, action.payload);
+    yield put(fetchOrderDetailSuccess(response.data));
+  } catch (error: unknown) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'Failed to fetch order detail';
+    yield put(fetchOrderDetailFailed(errorMessage));
+  }
 }
 
-export default orderSaga; 
+export default function* orderSaga() {
+  yield takeLatest(fetchOrderListStart.type, fetchOrderListSaga);
+  yield takeLatest(fetchOrderDetailStart.type, fetchOrderDetailSaga);
+} 
