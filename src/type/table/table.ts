@@ -33,4 +33,16 @@ export interface TableListState extends ListPageParams {
   error: string | null;
   filters: TableFilters;
   storeId: string;
+}
+
+export interface ChangeTableStatusRequest {
+  tableId: string;
+  storeId: string;
+  status: number; // API expects numbers 0-4 for enum values
+}
+
+export interface ChangeTableStatusParams {
+  tableId: string;
+  storeId: string;
+  status: TableStatus; // Frontend uses string values
 } 

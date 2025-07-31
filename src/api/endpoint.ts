@@ -9,6 +9,7 @@ const endpoints = {
   },
   table: {
     list: (storeId: string) => `/api/manager/tables?storeId=${storeId}`,
+    changeStatus: (tableId: string, storeId: string) => `/api/manager/table/status?tableId=${tableId}&storeId=${storeId}`,
   },
   menuItem: {
     list: () => '/api/admin/menu-item/list',
@@ -33,6 +34,7 @@ export const API_ENDPOINTS = {
   },
   TABLE: {
     LIST: endpoints.table.list,
+    CHANGE_STATUS: endpoints.table.changeStatus,
   },
   MENU_ITEM: {
     LIST: endpoints.menuItem.list(),

@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { IconButton, Badge } from 'react-native-paper';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Badge } from 'react-native-paper';
+import Icon from '../../common/Icon/Icon';
 import { useAppSelector } from '../../../hooks/redux';
 
 interface NotificationBellProps {
@@ -14,7 +15,9 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onPress, size = 24,
 
   return (
     <View>
-      <IconButton icon="bell" size={size} iconColor={color} onPress={onPress} />
+      <TouchableOpacity onPress={onPress} style={styles.iconButton}>
+        <Icon name="bell" size={size} color={color} />
+      </TouchableOpacity>
       {unreadCount > 0 && (
         <Badge style={styles.badge} size={16}>
           {unreadCount}
@@ -25,6 +28,9 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onPress, size = 24,
 };
 
 const styles = StyleSheet.create({
+  iconButton: {
+    padding: 8,
+  },
   badge: {
     position: 'absolute',
     top: 4,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from '../Icon/Icon';
 import { useAppSelector } from '../../../hooks/redux';
 import Colors from '../../../utils/Colors';
 import { spacing, ICON_SIZES, LAYOUT } from '../../../utils/theme';
@@ -32,11 +32,11 @@ const BottomNav: React.FC<Props> = ({ selected, onSelect }) => {
         return (
           <TouchableOpacity key={m.key} style={styles.item} onPress={() => onSelect(m.key)}>
             <View style={styles.iconContainer}>
-              <Icon 
-                name={m.icon} 
-                size={ICON_SIZES.xl} 
-                color={active ? Colors.primary : Colors.textMuted} 
-              />
+                             <Icon 
+                 name={m.icon} 
+                 size={ICON_SIZES.xl} 
+                 color={active ? Colors.primary : Colors.textMuted} 
+               />
               {m.key === 'notification' && unreadCount > 0 && (
                 <View style={styles.badge}>
                   <Text style={styles.badgeText}>

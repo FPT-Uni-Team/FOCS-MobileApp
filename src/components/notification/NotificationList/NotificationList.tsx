@@ -1,6 +1,7 @@
 import React, { memo} from 'react';
 import { View, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-import { Text, Card, Chip, IconButton } from 'react-native-paper';
+import { Text, Card, Chip } from 'react-native-paper';
+import Icon from '../../common/Icon/Icon';
 import { StaffNotification } from '../../../type/notification/notification';
 import useNotifications from '../../../hooks/useNotifications';
 import { getTypeStyle, getPriorityStyle, getTypeIcon, formatTime } from '../../../utils/notification';
@@ -29,10 +30,10 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
           <View style={styles.notificationHeader}>
             <View style={styles.leftSection}>
               <View style={[styles.iconContainer, typeStyle.container]}>
-                <IconButton
-                  icon={getTypeIcon(notification.type)}
+                <Icon
+                  name={getTypeIcon(notification.type)}
                   size={20}
-                  iconColor={typeStyle.iconColor}
+                  color={typeStyle.iconColor}
                 />
               </View>
               <View style={styles.headerInfo}>
@@ -46,7 +47,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
                 onPress={() => onDismiss(notification.id)}
                 style={styles.dismissButton}
               >
-                <IconButton icon="close" size={16} iconColor="#999" />
+                <Icon name="close" size={16} color="#999" />
               </TouchableOpacity>
             </View>
           </View>
@@ -88,7 +89,7 @@ const NotificationList: React.FC = () => {
 
   const renderEmptyState = () => (
     <View style={styles.emptyState}>
-      <IconButton icon="bell-off" size={48} iconColor="#ccc" />
+      <Icon name="bell-off" size={48} color="#ccc" />
       <Text style={styles.emptyText}>Không có thông báo</Text>
     </View>
   );
