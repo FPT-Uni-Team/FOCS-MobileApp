@@ -22,6 +22,7 @@ const endpoints = {
   order: {
     list: () => '/api/cashier/orders',
     detail: (orderCode: string) => `/api/order/order-by-code/${orderCode}`,
+    changeStatus: (orderCode: string) => `/api/order/change-status/${orderCode}`,
   },
 };
 
@@ -47,6 +48,7 @@ export const API_ENDPOINTS = {
   ORDER: {
     LIST: endpoints.order.list(),
     DETAIL: endpoints.order.detail,
+    CHANGE_STATUS: endpoints.order.changeStatus,
   },
 };
 

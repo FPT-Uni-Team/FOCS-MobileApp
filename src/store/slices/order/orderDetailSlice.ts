@@ -49,6 +49,13 @@ const orderDetailSlice = createSlice({
     setRefreshing: (state, action: PayloadAction<boolean>) => {
       state.refreshing = action.payload;
     },
+    forceRefresh: (state) => {
+      // Force refresh by clearing the order data
+      state.order = {} as OrderDTO;
+      state.loading = false;
+      state.success = false;
+      state.error = null;
+    },
   },
 });
 
@@ -58,6 +65,7 @@ export const {
   fetchOrderDetailFailed,
   resetOrderDetail,
   setRefreshing,
+  forceRefresh,
 } = orderDetailSlice.actions;
 
 export default orderDetailSlice.reducer;

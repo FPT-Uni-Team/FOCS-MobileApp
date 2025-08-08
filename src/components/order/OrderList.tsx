@@ -29,7 +29,7 @@ const OrderList: React.FC<OrderListProps> = () => {
   });
 
   const renderItem = ({ item }: { item: OrderDTO }) => (
-    <OrderListItem item={item} />
+    <OrderListItem item={item} onOrderUpdated={handleRefresh} />
   );
 
   const renderFooter = () => {
