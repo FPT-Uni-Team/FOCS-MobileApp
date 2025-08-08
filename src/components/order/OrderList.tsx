@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, FlatList, RefreshControl, Text } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import OrderListItem from './OrderListItem';
-import { fetchOrdersStart } from '../../store/slices/order/orderSlice';
+import { fetchOrderListStart } from '../../store/slices/order/orderSlice';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
 import type { OrderDTO } from '../../type/order/order';
 import Colors from '../../utils/Colors';
@@ -24,12 +24,12 @@ const OrderList: React.FC<OrderListProps> = () => {
       items: state.order.items,
       total: state.order.total,
     }),
-    fetchAction: fetchOrdersStart,
+    fetchAction: fetchOrderListStart,
     initialParams: { page: 1, page_size: 10 },
   });
 
   const renderItem = ({ item }: { item: OrderDTO }) => (
-    <OrderListItem item={item} />
+    <OrderListItem item={item} onOrderUpdated={handleRefresh} />
   );
 
   const renderFooter = () => {

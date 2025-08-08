@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { Text, IconButton } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Text } from 'react-native-paper';
+import Icon from '../Icon/Icon';
 
 interface MenuItem {
   key: string;
@@ -32,7 +32,7 @@ const Sidebar: React.FC<Props> = ({ selected, onSelect }) => {
             style={[styles.item, active && styles.activeItem]}
             onPress={() => onSelect(m.key)}
           >
-            <Icon name={m.icon} size={24} color={active ? '#0d6efd' : '#555'} />
+                         <Icon name={m.icon} size={24} color={active ? '#0d6efd' : '#555'} />
             {!collapsed && (
               <Text style={[styles.label, active && styles.activeLabel]}>{m.label}</Text>
             )}
@@ -40,12 +40,16 @@ const Sidebar: React.FC<Props> = ({ selected, onSelect }) => {
         );
       })}
       <View style={{ flex: 1 }} />
-      <IconButton
-        icon={collapsed ? 'chevron-right' : 'chevron-left'}
-        size={28}
+      <TouchableOpacity
         onPress={() => setCollapsed(!collapsed)}
         style={styles.toggleBtn}
-      />
+      >
+        <Icon
+          name={collapsed ? 'chevron-right' : 'chevron-left'}
+          size={28}
+          color="#666"
+        />
+      </TouchableOpacity>
     </View>
   );
 };

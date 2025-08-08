@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Appbar, ActivityIndicator } from 'react-native-paper';
+import { TouchableOpacity } from 'react-native';
+import Icon from '../../components/common/Icon/Icon';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
@@ -31,7 +33,9 @@ const MenuItemDetailScreen: React.FC = () => {
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <Appbar.Header style={styles.header}>
-        <Appbar.BackAction onPress={() => navigation.goBack()} iconColor={Colors.textPrimary} />
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Icon name="arrow-left" size={24} color={Colors.textPrimary} />
+        </TouchableOpacity>
         <Appbar.Content
           title={menuItem.name || 'Menu Item Detail'}
           titleStyle={styles.headerTitle}
@@ -61,6 +65,10 @@ const styles = StyleSheet.create({
   headerTitle: {
     color: Colors.textPrimary,
     fontWeight: '600',
+  },
+  backButton: {
+    padding: 8,
+    marginLeft: 8,
   },
 });
 

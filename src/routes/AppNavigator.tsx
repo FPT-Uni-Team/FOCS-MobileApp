@@ -12,6 +12,7 @@ import NotificationScreen from '../pages/notification/NotificationScreen';
 import UserProfileScreen from '../pages/profile/UserProfileScreen';
 import BottomNav from '../components/common/BottomNav/BottomNav';
 import MenuItemDetailScreen from '../pages/menu/MenuItemDetailScreen';
+import OrderDetailScreen from '../pages/order/OrderDetailScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -99,6 +100,7 @@ const AppNavigator = () => {
         <>
           <Stack.Screen name="MainApp" component={MainAppTabs} />
           <Stack.Screen name="MenuItemDetail" component={MenuItemDetailScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="OrderDetail" component={OrderDetailScreen} options={{ headerShown: false }} />
         </>
       ) : (
         <>

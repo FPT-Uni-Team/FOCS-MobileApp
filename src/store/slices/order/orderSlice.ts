@@ -25,22 +25,18 @@ const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
-    fetchOrdersStart(state, action: PayloadAction<Partial<OrderListParams> | undefined>) {
+    fetchOrderListStart(state, action: PayloadAction<OrderListParams>) {
       state.loading = true;
       state.error = null;
-      const newParams = { ...state.params, ...(action.payload || {}) };
-      state.params = {
-        page: newParams.page ?? 1,
-        page_size: newParams.page_size ?? 10,
-      };
+      state.params = action.payload;
     },
-    fetchOrdersSuccess(state, action: PayloadAction<{ items: OrderDTO[]; total: number }>) {
+    fetchOrderListSuccess(state, action: PayloadAction<{ items: OrderDTO[]; total: number }>) {
       state.loading = false;
       state.error = null;
       state.items = action.payload.items;
       state.total = action.payload.total;
     },
-    fetchOrdersFailure(state, action: PayloadAction<string>) {
+    fetchOrderListFailure(state, action: PayloadAction<string>) {
       state.loading = false;
       state.error = action.payload;
       state.items = [];
@@ -57,9 +53,9 @@ const orderSlice = createSlice({
 });
 
 export const {
-  fetchOrdersStart,
-  fetchOrdersSuccess,
-  fetchOrdersFailure,
+  fetchOrderListStart,
+  fetchOrderListSuccess,
+  fetchOrderListFailure,
   resetOrderState,
 } = orderSlice.actions;
 

@@ -73,7 +73,6 @@ function* changeStatusWorker(
     yield call(menuItemService.changeStatus, status, menuItemId);
     yield put(fetchMenuItemDetailStart(menuItemId));
   } catch (error) {
-    console.error('Change status error:', error);
     yield put(fetchMenuItemDetailFailed('Failed to change status'));
   }
 }
