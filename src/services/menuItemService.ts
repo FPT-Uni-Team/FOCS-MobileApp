@@ -20,6 +20,13 @@ const menuItemService = {
 
   changeStatus: (action: string, itemId: string) =>
     axiosClient.put(endpoints.menuItem.changeStatus(action, itemId)),
+
+  getMenuItemsByIds: (itemIds: string[]) =>
+    axiosClient.post(endpoints.menuItem.list(), {
+      menu_item_ids: itemIds,
+      page: 1,
+      limit: itemIds.length,
+    }),
 };
 
 export default menuItemService; 

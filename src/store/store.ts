@@ -7,6 +7,9 @@ import notificationReducer from './slices/notification/notificationSlice';
 import menuItemReducer from './slices/menuItem/menuItemSlice';
 import menuItemDetailReducer from './slices/menuItem/menuItemDetailSlice';
 import orderReducer from './slices/order/orderSlice';
+import orderDetailReducer from './slices/order/orderDetailSlice';
+import cartReducer from './slices/cart/cartSlice';
+import checkoutReducer from './slices/cart/checkoutSlice';
 import { signalrInstance } from '../services/signalrService';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -19,6 +22,9 @@ export const store = configureStore({
     menuItem: menuItemReducer,
     menuItemDetail: menuItemDetailReducer,
     order: orderReducer,
+    orderDetail: orderDetailReducer,
+    cartItem: cartReducer,
+    checkoutSlice: checkoutReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
