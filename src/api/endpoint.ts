@@ -23,6 +23,11 @@ const endpoints = {
     list: () => '/api/cashier/orders',
     detail: (orderCode: string) => `/api/order/order-by-code/${orderCode}`,
   },
+  checkout: {
+    apply_discount: (actorId: string) => `/api/order/${actorId}/apply-discount`,
+    create_cart: () => `/api/order`,
+    payment: () => '/api/payment',
+  },
 };
 
 export const API_ENDPOINTS = {
@@ -47,6 +52,11 @@ export const API_ENDPOINTS = {
   ORDER: {
     LIST: endpoints.order.list(),
     DETAIL: endpoints.order.detail,
+  },
+  CHECKOUT: {
+    APPLY_DISCOUNT: endpoints.checkout.apply_discount,
+    CREATE_CART: endpoints.checkout.create_cart(),
+    PAYMENT: endpoints.checkout.payment(),
   },
 };
 

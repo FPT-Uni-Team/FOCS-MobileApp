@@ -71,5 +71,5 @@ function* handleChangeStatus(action: { payload: ChangeTableStatusParams }): Gene
 
 export default function* tableListSaga() {
   yield takeLatest([tableListRequest.type, 'tableList/setTableParams'], handleFetch);
-  yield takeLatest(changeTableStatusRequest.type, handleChangeStatus);
+  yield takeLatest(changeTableStatusRequest, handleChangeStatus);
 } 

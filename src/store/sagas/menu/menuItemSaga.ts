@@ -30,8 +30,41 @@ function* fetchMenuItemList(
   try {
     const response = yield call(menuItemService.getListMenuItems, action.payload);
     const dataMapped = objectMapper(response.data.items, fieldMap) as MenuListDataType[];
+    
+   
+    const itemsWithImages: MenuListDataType[] = [];
+    for (let i = 0; i < dataMapped.length; i++) {
+      const item = dataMapped[i];
+      
+      if (i < 20) { // Only fetch images for first 20 items to improve performance
+        try {
+          const imageResponse = yield call(menuItemService.menuItemImage, item.menuId);
+          const imageData = imageResponse.data || [];
+          const firstImageUrl = Array.isArray(imageData) && imageData.length > 0
+            ? (typeof imageData[0] === 'string' ? imageData[0] : imageData[0]?.url || imageData[0]?.image_url || '')
+            : '';
+          
+          itemsWithImages.push({
+            ...item,
+            menuImageUrl: firstImageUrl || 'https://via.placeholder.com/120x120?text=Food',
+          });
+        } catch (error) {
+          itemsWithImages.push({
+            ...item,
+            menuImageUrl: 'https://via.placeholder.com/120x120?text=Food',
+          });
+        }
+      } else {
+        // Use placeholder for remaining items to improve performance
+        itemsWithImages.push({
+          ...item,
+          menuImageUrl: 'https://via.placeholder.com/120x120?text=Food',
+        });
+      }
+    }
+    
     const total = response.data.total_count;
-    yield put(fetchMenuItemsSuccess({ items: dataMapped, total }));
+    yield put(fetchMenuItemsSuccess({ items: itemsWithImages, total }));
   } catch (error: unknown) {
     const errorMessage =
       error instanceof Error ? error.message : 'Failed to fetch menu items';
@@ -47,7 +80,10 @@ function* fetchMenuItemDetail(
     const menuItemDetailData = response.data as MenuItem;
 
     const responseImage = yield call(menuItemService.menuItemImage, action.payload);
-    menuItemDetailData.images = responseImage.data as [];
+    const imageData = responseImage.data || [];
+    menuItemDetailData.images = Array.isArray(imageData) 
+      ? imageData.map((img: any) => typeof img === 'string' ? img : img?.url || img?.image_url || '')
+      : [];
 
     const responseVariantGroups = yield call(menuItemService.menuItemGroups, action.payload);
     menuItemDetailData.variant_groups = responseVariantGroups.data as VariantGroup[];

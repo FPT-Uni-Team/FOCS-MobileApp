@@ -9,7 +9,6 @@ import {
   getOrderStatusText, 
   getOrderTypeText, 
   getPaymentStatusText,
-  getOrderStatusColor 
 } from '../../type/order/order';
 import { formatPrice } from '../../utils/formatPrice';
 import {
@@ -90,8 +89,8 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ orderId }) => {
           <View style={styles.row}>
             <Text style={styles.label}>Status:</Text>
             <StatusChip 
-              status={getOrderStatusText(order.order_status)}
-              color={getOrderStatusColor(order.order_status)}
+              label={getOrderStatusText(order.order_status)}
+              isPositive={order.order_status === 4 || order.order_status === 1}
             />
           </View>
           

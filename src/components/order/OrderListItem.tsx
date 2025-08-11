@@ -40,9 +40,9 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ item }) => {
   };
 
   const isPaid = item.payment_status === 1;
-  const hasDiscount = item.discount_amount > 0;
-  const hasTax = item.tax_amount > 0;
-  const hasNote = item.customer_note && item.customer_note !== 'none';
+  const hasDiscount = (item.discount_amount || 0) > 0;
+  const hasTax = (item.tax_amount || 0) > 0;
+  const hasNote = item.customer_note && item.customer_note !== 'none' && item.customer_note !== '';
 
   return (
     <Pressable onPress={handlePress} android_ripple={{ color: Colors.borderLight }}>
@@ -51,7 +51,7 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ item }) => {
           <View style={styles.header}>
             <View style={styles.leftSection}>
               <Text variant="titleLarge" style={styles.orderCode}>
-                {item.order_code}
+                {item.order_code || 'N/A'}
               </Text>
               <View style={styles.statusRow}>
                 <StatusDot color={getOrderStatusColor(item.order_status)} />
@@ -86,16 +86,16 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ item }) => {
           <View style={styles.financialSection}>
             <View style={styles.priceRow}>
               <Text variant="bodySmall" style={styles.priceLabel}>Sub Total:</Text>
-              <Text variant="bodyMedium" style={styles.priceValue}>
-                {formatPrice(item.sub_total_amount)}
-              </Text>
+                          <Text variant="bodyMedium" style={styles.priceValue}>
+              {formatPrice(item.sub_total_amount || 0)}
+            </Text>
             </View>
             
             {hasDiscount && (
               <View style={styles.priceRow}>
                 <Text variant="bodySmall" style={styles.priceLabel}>Discount:</Text>
                 <Text variant="bodyMedium" style={[styles.priceValue, styles.discountText]}>
-                  -{formatPrice(item.discount_amount)}
+                  -{formatPrice(item.discount_amount || 0)}
                 </Text>
               </View>
             )}
@@ -104,7 +104,7 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ item }) => {
               <View style={styles.priceRow}>
                 <Text variant="bodySmall" style={styles.priceLabel}>Tax:</Text>
                 <Text variant="bodyMedium" style={styles.priceValue}>
-                  {formatPrice(item.tax_amount)}
+                  {formatPrice(item.tax_amount || 0)}
                 </Text>
               </View>
             )}
@@ -113,7 +113,7 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ item }) => {
           <View style={styles.footer}>
             <View style={styles.totalContainer}>
               <Text variant="titleLarge" style={styles.totalPrice}>
-                {formatPrice(item.total_amount)}
+                {formatPrice(item.total_amount || 0)}
               </Text>
               <Text variant="bodySmall" style={styles.totalLabel}>
                 Total Amount
