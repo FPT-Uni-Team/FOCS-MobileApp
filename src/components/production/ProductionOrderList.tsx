@@ -32,11 +32,10 @@ const ProductionOrderList: React.FC<ProductionOrderListProps> = () => {
       total: state.productionOrder.total,
       error: state.productionOrder.error,
     }),
-    fetchAction: fetchProductionOrderListStart,
+    fetchAction: (params) => fetchProductionOrderListStart({ ...params, storeId: storeId || '550e8400-e29b-41d4-a716-446655440000' }),
     initialParams: { 
       page: 1, 
       page_size: 10,
-      storeId: storeId || '550e8400-e29b-41d4-a716-446655440000',
     },
   });
 

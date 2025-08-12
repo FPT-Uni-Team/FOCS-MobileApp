@@ -69,12 +69,12 @@ const SignalRDataDisplay: React.FC<SignalRDataDisplayProps> = ({ storeId }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.white,
+    backgroundColor: '#FFFFFF',
     margin: 16,
     borderRadius: 8,
     padding: 16,
     elevation: 2,
-    shadowColor: Colors.black,
+    shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
