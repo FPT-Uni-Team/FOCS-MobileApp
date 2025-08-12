@@ -10,6 +10,7 @@ import orderReducer from './slices/order/orderSlice';
 import orderDetailReducer from './slices/order/orderDetailSlice';
 import cartReducer from './slices/cart/cartSlice';
 import checkoutReducer from './slices/cart/checkoutSlice';
+import productionOrderReducer from './slices/production/productionOrderSlice';
 import { signalrInstance } from '../services/signalrService';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -25,6 +26,7 @@ export const store = configureStore({
     orderDetail: orderDetailReducer,
     cartItem: cartReducer,
     checkoutSlice: checkoutReducer,
+    productionOrder: productionOrderReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
