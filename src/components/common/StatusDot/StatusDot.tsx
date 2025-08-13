@@ -1,9 +1,11 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
+import { TABLE_STATUS_COLORS } from '../../../utils/tableStatusColors';
+import type { TableStatus } from '../../../type/table/table';
 
 interface StatusDotProps {
-  status?: 'Available' | 'Occupied' | 'Reserved' | 'Cleaning' | 'OutOfService';
+  status?: TableStatus;
   color?: string;
   size?: number;
 }
@@ -11,15 +13,7 @@ interface StatusDotProps {
 const StatusDot: React.FC<StatusDotProps> = ({ status, color, size = 12 }) => {
   const theme = useTheme();
 
-  const colors: Record<string, string> = {
-    Available: '#2196F3',      
-    Occupied: '#F44336',       
-    Reserved: '#FF9800',       
-    Cleaning: '#4CAF50',       
-    OutOfService: '#F44336',   
-  };
-
-  const dotColor = color || (status ? colors[status] : theme.colors.surfaceDisabled);
+  const dotColor = color || (status ? TABLE_STATUS_COLORS[status] : theme.colors.surfaceDisabled);
 
   return (
     <View

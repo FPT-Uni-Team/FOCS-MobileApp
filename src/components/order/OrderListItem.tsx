@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { Text, Surface, Chip } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 import StatusChip from '../common/StatusChip/StatusChip';
 import StatusDot from '../common/StatusDot/StatusDot';
 import { formatPrice } from '../../utils/formatPrice';
@@ -19,9 +20,10 @@ interface OrderListItemProps {
 }
 
 const OrderListItem: React.FC<OrderListItemProps> = ({ item }) => {
+  const navigation = useNavigation<any>();
+  
   const handlePress = () => {
-    // TODO: Navigate to OrderDetail when needed
-    console.log('Order pressed:', item.order_code);
+    navigation.navigate('OrderDetail', { orderId: item.order_code });
   };
 
   const formatDateTime = (dateString: string) => {
@@ -38,9 +40,9 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ item }) => {
   };
 
   const isPaid = item.payment_status === 1;
-  const hasDiscount = item.discount_amount > 0;
-  const hasTax = item.tax_amount > 0;
-  const hasNote = item.customer_note && item.customer_note !== 'none';
+  const hasDiscount = (item.discount_amount || 0) > 0;
+  const hasTax = (item.tax_amount || 0) > 0;
+  const hasNote = item.customer_note && item.customer_note !== 'none' && item.customer_note !== '';
 
   return (
     <Pressable onPress={handlePress} android_ripple={{ color: Colors.borderLight }}>
@@ -49,7 +51,7 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ item }) => {
           <View style={styles.header}>
             <View style={styles.leftSection}>
               <Text variant="titleLarge" style={styles.orderCode}>
-                {item.order_code}
+                {item.order_code || 'N/A'}
               </Text>
               <View style={styles.statusRow}>
                 <StatusDot color={getOrderStatusColor(item.order_status)} />
@@ -84,16 +86,16 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ item }) => {
           <View style={styles.financialSection}>
             <View style={styles.priceRow}>
               <Text variant="bodySmall" style={styles.priceLabel}>Sub Total:</Text>
-              <Text variant="bodyMedium" style={styles.priceValue}>
-                {formatPrice(item.sub_total_amount)}
-              </Text>
+                          <Text variant="bodyMedium" style={styles.priceValue}>
+              {formatPrice(item.sub_total_amount || 0)}
+            </Text>
             </View>
             
             {hasDiscount && (
               <View style={styles.priceRow}>
                 <Text variant="bodySmall" style={styles.priceLabel}>Discount:</Text>
                 <Text variant="bodyMedium" style={[styles.priceValue, styles.discountText]}>
-                  -{formatPrice(item.discount_amount)}
+                  -{formatPrice(item.discount_amount || 0)}
                 </Text>
               </View>
             )}
@@ -102,7 +104,7 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ item }) => {
               <View style={styles.priceRow}>
                 <Text variant="bodySmall" style={styles.priceLabel}>Tax:</Text>
                 <Text variant="bodyMedium" style={styles.priceValue}>
-                  {formatPrice(item.tax_amount)}
+                  {formatPrice(item.tax_amount || 0)}
                 </Text>
               </View>
             )}
@@ -111,7 +113,7 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ item }) => {
           <View style={styles.footer}>
             <View style={styles.totalContainer}>
               <Text variant="titleLarge" style={styles.totalPrice}>
-                {formatPrice(item.total_amount)}
+                {formatPrice(item.total_amount || 0)}
               </Text>
               <Text variant="bodySmall" style={styles.totalLabel}>
                 Total Amount

@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Searchbar, Surface } from 'react-native-paper';
+import Icon from '../Icon/Icon';
 import Colors from '../../../utils/Colors';
 import { spacing } from '../../../utils/spacing';
 
@@ -19,15 +20,18 @@ const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
   return (
     <Surface style={[styles.container, style]} elevation={0}>
-      <Searchbar
-        placeholder={placeholder}
-        onChangeText={onChangeText}
-        value={value}
-        style={styles.searchbar}
-        inputStyle={styles.searchInput}
-        iconColor={Colors.textSecondary}
-        placeholderTextColor={Colors.textPlaceholder}
-      />
+      <View style={styles.searchContainer}>
+        <Icon name="magnify" size={20} color={Colors.textSecondary} />
+        <Searchbar
+          placeholder={placeholder}
+          onChangeText={onChangeText}
+          value={value}
+          style={styles.searchbar}
+          inputStyle={styles.searchInput}
+          iconColor="transparent"
+          placeholderTextColor={Colors.textPlaceholder}
+        />
+      </View>
     </Surface>
   );
 };
@@ -40,10 +44,17 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Colors.borderLight,
   },
-  searchbar: {
-    elevation: 0,
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: Colors.backgroundSecondary,
     borderRadius: spacing.m,
+    paddingHorizontal: spacing.m,
+  },
+  searchbar: {
+    elevation: 0,
+    backgroundColor: 'transparent',
+    flex: 1,
   },
   searchInput: {
     fontSize: 16,
