@@ -33,7 +33,7 @@ export interface NotificationData {
   id?: string;
   title?: string;
   message?: string;
-  action_type?: 'New Ordered' | 'New Notify';
+  action_type?: 'New Ordered' | 'New Notify' | 'Kitchen Ready' | 'Kitchen Call Staff' | 'Customer Call Staff';
   table_id?: string;
   store_id?: string;
   order_id?: string;
@@ -188,6 +188,15 @@ class FirebaseNotificationService {
           case 'New Ordered':
             this.handleNewOrderNotification(notificationData);
             break;
+          case 'Kitchen Ready':
+            this.handleKitchenReadyNotification(notificationData);
+            break;
+          case 'Kitchen Call Staff':
+            this.handleKitchenCallStaffNotification(notificationData);
+            break;
+          case 'Customer Call Staff':
+            this.handleCustomerCallStaffNotification(notificationData);
+            break;
           case 'New Notify':
             this.handleNewNotifyNotification(notificationData);
             break;
@@ -213,6 +222,15 @@ class FirebaseNotificationService {
         switch (actionType) {
           case 'New Ordered':
             this.navigateToOrders(notificationData);
+            break;
+          case 'Kitchen Ready':
+            this.navigateToProductionOrders(notificationData);
+            break;
+          case 'Kitchen Call Staff':
+            this.navigateToProductionOrders(notificationData);
+            break;
+          case 'Customer Call Staff':
+            this.navigateToTableList(notificationData);
             break;
           case 'New Notify':
             this.navigateToNotifications(notificationData);
@@ -245,6 +263,51 @@ class FirebaseNotificationService {
       message: data.message || 'You have a new notification',
       type: 'SYSTEM',
       priority: 'MEDIUM',
+      isRead: false,
+      timestamp: new Date().toISOString(),
+      tableNumber: data.table_id ? parseInt(data.table_id) : undefined,
+    };
+
+    store.dispatch(addNotification(notification));
+  }
+
+  private handleKitchenReadyNotification(data: NotificationData): void {
+    const notification: StaffNotification = {
+      id: data.id || this.generateGuid(),
+      title: data.title || 'Kitchen Ready',
+      message: data.message || 'Food is ready for pickup',
+      type: 'KITCHEN_READY',
+      priority: 'HIGH',
+      isRead: false,
+      timestamp: new Date().toISOString(),
+      tableNumber: data.table_id ? parseInt(data.table_id) : undefined,
+    };
+
+    store.dispatch(addNotification(notification));
+  }
+
+  private handleKitchenCallStaffNotification(data: NotificationData): void {
+    const notification: StaffNotification = {
+      id: data.id || this.generateGuid(),
+      title: data.title || 'Kitchen Call Staff',
+      message: data.message || 'Kitchen needs staff assistance',
+      type: 'CUSTOMER_REQUEST',
+      priority: 'URGENT',
+      isRead: false,
+      timestamp: new Date().toISOString(),
+      tableNumber: data.table_id ? parseInt(data.table_id) : undefined,
+    };
+
+    store.dispatch(addNotification(notification));
+  }
+
+  private handleCustomerCallStaffNotification(data: NotificationData): void {
+    const notification: StaffNotification = {
+      id: data.id || this.generateGuid(),
+      title: data.title || 'Customer Call Staff',
+      message: data.message || 'Customer is calling for staff',
+      type: 'CUSTOMER_REQUEST',
+      priority: 'HIGH',
       isRead: false,
       timestamp: new Date().toISOString(),
       tableNumber: data.table_id ? parseInt(data.table_id) : undefined,
@@ -296,6 +359,41 @@ class FirebaseNotificationService {
 
         this.navigationRef.current.navigate('MainApp', {
           screen: 'Notifications',
+          params: params,
+        });
+      }
+    } catch (error) {
+    }
+  }
+
+  private navigateToProductionOrders(data: NotificationData): void {
+    try {
+      if (this.navigationRef?.current?.isReady()) {
+        const params: NavigationParams = {
+          tableId: data.table_id,
+          storeId: data.store_id,
+          orderId: data.order_id,
+        };
+
+        this.navigationRef.current.navigate('MainApp', {
+          screen: 'ProductionOrders',
+          params: params,
+        });
+      }
+    } catch (error) {
+    }
+  }
+
+  private navigateToTableList(data: NotificationData): void {
+    try {
+      if (this.navigationRef?.current?.isReady()) {
+        const params: NavigationParams = {
+          tableId: data.table_id,
+          storeId: data.store_id,
+        };
+
+        this.navigationRef.current.navigate('MainApp', {
+          screen: 'Tables',
           params: params,
         });
       }
