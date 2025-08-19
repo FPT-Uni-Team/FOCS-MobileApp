@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, StyleSheet, FlatList, RefreshControl, Text } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
-import SearchBar from '../common/SearchBar/SearchBar';
 import MenuItemListItem from './MenuItemListItem';
 import { fetchMenuItemsStart } from '../../store/slices/menuItem/menuItemSlice';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
@@ -12,8 +11,6 @@ import { spacing } from '../../utils/spacing';
 interface MenuItemListProps {}
 
 const MenuItemList: React.FC<MenuItemListProps> = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-
   const {
     data: menuItems,
     loading,
@@ -21,7 +18,6 @@ const MenuItemList: React.FC<MenuItemListProps> = () => {
     loadingMore,
     handleRefresh,
     handleLoadMore,
-    updateParams,
   } = usePaginatedList<MenuListDataType>({
     selector: (state) => ({
       loading: state.menuItem.loading,
@@ -30,16 +26,6 @@ const MenuItemList: React.FC<MenuItemListProps> = () => {
     }),
     fetchAction: fetchMenuItemsStart,
   });
-
-  const onSearch = (value: string) => {
-    setSearchQuery(value);
-    updateParams((prev) => ({
-      ...prev,
-      page: 1,
-      search_by: 'name',
-      search_value: value,
-    }));
-  };
 
   const renderItem = ({ item }: { item: MenuListDataType }) => (
     <MenuItemListItem item={item} />
@@ -61,12 +47,6 @@ const MenuItemList: React.FC<MenuItemListProps> = () => {
 
   return (
     <View style={styles.container}>
-      <SearchBar
-        placeholder="Search menu items..."
-        value={searchQuery}
-        onChangeText={onSearch}
-      />
-
       <FlatList
         data={menuItems}
         renderItem={renderItem}
@@ -90,7 +70,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingBottom: spacing.xl,
-    paddingTop: spacing.xs,
+    paddingTop: spacing.s,
     flexGrow: 1,
   },
   loadingFooter: {

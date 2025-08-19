@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, StyleSheet, FlatList, RefreshControl, Text } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
-import SearchBar from '../common/SearchBar/SearchBar';
 import ProductionOrderListItem from './ProductionOrderListItem';
 import { fetchProductionOrderListStart } from '../../store/slices/production/productionOrderSlice';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
 import { useAppSelector } from '../../hooks/redux';
+import { useResponsive } from '../../hooks/useResponsive';
 import type { ProductionOrder } from '../../type/production/production';
 import Colors from '../../utils/Colors';
 import { spacing } from '../../utils/spacing';
@@ -13,9 +13,9 @@ import { spacing } from '../../utils/spacing';
 interface ProductionOrderListProps {}
 
 const ProductionOrderList: React.FC<ProductionOrderListProps> = () => {
-  const [searchQuery, setSearchQuery] = useState('');
   const error = useAppSelector((state) => state.productionOrder.error);
   const storeId = useAppSelector((state) => state.productionOrder.storeId);
+  const { isTablet, columns } = useResponsive();
 
   const {
     data: productionOrders,
@@ -24,7 +24,6 @@ const ProductionOrderList: React.FC<ProductionOrderListProps> = () => {
     loadingMore,
     handleRefresh,
     handleLoadMore,
-    updateParams,
   } = usePaginatedList<ProductionOrder>({
     selector: (state) => ({
       loading: state.productionOrder.loading,
@@ -32,30 +31,19 @@ const ProductionOrderList: React.FC<ProductionOrderListProps> = () => {
       total: state.productionOrder.total,
       error: state.productionOrder.error,
     }),
-    fetchAction: (params) => fetchProductionOrderListStart({ ...params, storeId: storeId || '550e8400-e29b-41d4-a716-446655440000' }),
+    fetchAction: (params) => fetchProductionOrderListStart({ ...params, storeId: storeId || '550e8400-e29b-41d4-a716-446655440000' } as any),
     initialParams: { 
       page: 1, 
       page_size: 10,
     },
   });
 
-  
-
-  const onSearch = (value: string) => {
-    setSearchQuery(value);
-    updateParams((prev) => ({
-      ...prev,
-      page: 1,
-      search_by: 'code',
-      search_value: value,
-    }));
-  };
-
   const renderItem = ({ item }: { item: ProductionOrder }) => (
     <ProductionOrderListItem 
       item={item}
+      isTablet={isTablet}
       onPress={() => {
-        // Navigate to detail screen when implemented
+        
       }}
     />
   );
@@ -78,26 +66,21 @@ const ProductionOrderList: React.FC<ProductionOrderListProps> = () => {
     );
   };
 
-
-
   return (
     <View style={styles.container}>
-      <SearchBar
-        placeholder="Search production orders..."
-        value={searchQuery}
-        onChangeText={onSearch}
-      />
-
       <FlatList
         data={productionOrders}
         renderItem={renderItem}
         keyExtractor={(item) => item.code}
+        numColumns={columns}
+        key={`${columns}-${isTablet}`}
+        columnWrapperStyle={columns > 1 ? styles.row : undefined}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
         ListFooterComponent={renderFooter}
         ListEmptyComponent={renderEmpty}
-        contentContainerStyle={styles.listContent}
+        contentContainerStyle={[styles.listContent, isTablet && styles.tabletListContent]}
         showsVerticalScrollIndicator={false}
       />
     </View>
@@ -111,6 +94,14 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingBottom: spacing.xl,
+    paddingTop: spacing.s,
+  },
+  tabletListContent: {
+    paddingHorizontal: spacing.l,
+  },
+  row: {
+    justifyContent: 'space-around',
+    paddingHorizontal: spacing.s,
   },
   loadingFooter: {
     marginVertical: spacing.l,

@@ -17,7 +17,7 @@ const ProductionOrderListScreen: React.FC = () => {
     
     
     const timer = setTimeout(() => {
-      dispatch(fetchProductionOrderListStart({ page: 1, page_size: 10, storeId }));
+      dispatch(fetchProductionOrderListStart({ page: 1, page_size: 10, storeId } as any));
     }, 500);
 
     let isMounted = true;
@@ -27,7 +27,7 @@ const ProductionOrderListScreen: React.FC = () => {
         await productionOrderRealtime.connect(storeId, 'kitchen');
  
         productionOrderRealtime.on('ReceiveOrderWrapUpdate', () => {
-          if (isMounted) dispatch(fetchProductionOrderListStart({ page: 1, page_size: 10, storeId }));
+          if (isMounted) dispatch(fetchProductionOrderListStart({ page: 1, page_size: 10, storeId } as any));
         });
              } catch (error) {
          // SignalR connection failed silently

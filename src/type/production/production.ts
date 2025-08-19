@@ -61,8 +61,6 @@ export interface ProductionOrderListState {
 export interface ProductionOrderListParams {
   page?: number;
   page_size?: number;
-  search_by?: string;
-  search_value?: string;
   sort_by?: string;
   sort_order?: string;
   storeId?: string;

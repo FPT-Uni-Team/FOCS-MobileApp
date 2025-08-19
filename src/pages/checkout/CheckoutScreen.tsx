@@ -423,13 +423,13 @@ const CheckoutScreen = ({ navigation }: CheckoutScreenProps) => {
            <View style={styles.summaryRow}>
              <Text style={styles.summaryLabel}>Subtotal:</Text>
              <Text style={styles.summaryValue}>
-               {cartItems.reduce((total, item) => {
+               {cartItems.reduce((total: number, item: any) => {
                  const basePrice = item.base_price || 0;
                  let variantPrice = 0;
                  if (item.selectedVariants && item.variant_groups) {
-                   item.selectedVariants.forEach((selectedVariant) => {
-                     item.variant_groups?.forEach((group) => {
-                       const variant = group.variants.find((v) => v.id === selectedVariant.variant_id);
+                   item.selectedVariants.forEach((selectedVariant: any) => {
+                     item.variant_groups?.forEach((group: any) => {
+                       const variant = group.variants.find((v: any) => v.id === selectedVariant.variant_id);
                        if (variant) {
                          variantPrice += variant.price || 0;
                        }
@@ -452,13 +452,13 @@ const CheckoutScreen = ({ navigation }: CheckoutScreenProps) => {
            <Text style={styles.totalLabel}>Total:</Text>
            <Text style={styles.totalValue}>
              {(() => {
-               const localTotal = cartItems.reduce((total, item) => {
+               const localTotal = cartItems.reduce((total: number, item: any) => {
                  const basePrice = item.base_price || 0;
                  let variantPrice = 0;
                  if (item.selectedVariants && item.variant_groups) {
-                   item.selectedVariants.forEach((selectedVariant) => {
-                     item.variant_groups?.forEach((group) => {
-                       const variant = group.variants.find((v) => v.id === selectedVariant.variant_id);
+                   item.selectedVariants.forEach((selectedVariant: any) => {
+                     item.variant_groups?.forEach((group: any) => {
+                       const variant = group.variants.find((v: any) => v.id === selectedVariant.variant_id);
                        if (variant) {
                          variantPrice += variant.price || 0;
                        }

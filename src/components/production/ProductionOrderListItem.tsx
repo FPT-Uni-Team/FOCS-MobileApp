@@ -12,10 +12,11 @@ import {
 
 interface ProductionOrderListItemProps {
   item: ProductionOrder;
+  isTablet?: boolean;
   onPress?: () => void;
 }
 
-const ProductionOrderListItem: React.FC<ProductionOrderListItemProps> = ({ item, onPress }) => {
+const ProductionOrderListItem: React.FC<ProductionOrderListItemProps> = ({ item, isTablet = false, onPress }) => {
   const statusColor = getProductionOrderStatusColor(item.status);
   const statusText = getProductionOrderStatusText(item.status);
   const totalOrders = item.orders.length;
@@ -40,7 +41,7 @@ const ProductionOrderListItem: React.FC<ProductionOrderListItemProps> = ({ item,
 
   return (
     <Pressable onPress={onPress} android_ripple={{ color: Colors.borderLight }}>
-      <Surface style={styles.card} elevation={1}>
+      <Surface style={[styles.card, isTablet && styles.tabletCard]} elevation={1}>
         <View style={styles.cardContent}>
           <View style={styles.header}>
             <View style={styles.leftSection}>
@@ -88,12 +89,12 @@ const ProductionOrderListItem: React.FC<ProductionOrderListItemProps> = ({ item,
                 Order Details
               </Text>
               <View style={styles.ordersList}>
-                {item.orders.slice(0, 3).map((order, index) => (
+                {item.orders.slice(0, isTablet ? 4 : 3).map((order, index) => (
                   <View key={`${order.code}-${index}`} style={styles.orderItem}>
                     <View style={styles.orderInfo}>
-                                             <Text variant="bodyMedium" style={styles.orderItemCode}>
-                         #{order.code}
-                       </Text>
+                      <Text variant="bodyMedium" style={styles.orderItemCode}>
+                        #{order.code}
+                      </Text>
                       <View style={styles.amountContainer}>
                         <Text variant="bodySmall" style={styles.amountLabel}>
                           Items:
@@ -105,10 +106,10 @@ const ProductionOrderListItem: React.FC<ProductionOrderListItemProps> = ({ item,
                     </View>
                   </View>
                 ))}
-                {item.orders.length > 3 && (
+                {item.orders.length > (isTablet ? 4 : 3) && (
                   <View style={styles.moreIndicator}>
                     <Text variant="bodySmall" style={styles.moreText}>
-                      +{item.orders.length - 3} more orders
+                      +{item.orders.length - (isTablet ? 4 : 3)} more orders
                     </Text>
                   </View>
                 )}
@@ -127,6 +128,12 @@ const styles = StyleSheet.create({
     marginVertical: cardSpacing.vertical,
     borderRadius: spacing.m,
     backgroundColor: Colors.backgroundPrimary,
+  },
+  tabletCard: {
+    flex: 1,
+    marginHorizontal: spacing.s,
+    maxWidth: 400,
+    minHeight: 280,
   },
   cardContent: {
     padding: cardSpacing.horizontal,
