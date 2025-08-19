@@ -5,98 +5,139 @@ import { StaffNotification } from '../type/notification/notification';
 class SignalRService {
   private connection: signalR.HubConnection | null = null;
   private store: any;
-  private useMockData = true; // Set to false to use real SignalR connection
-  private mockTimer: ReturnType<typeof setInterval> | null = null;
+  private disableSignalR = true;
 
   public setStore(store: any) {
     this.store = store;
   }
 
   public connect(token: string) {
-    if (this.useMockData) {
-      this.connectMock();
+    if (this.disableSignalR) {
       return;
     }
 
-    if (this.connection || !this.store) {
+    if (this.connection) {
+      return;
+    }
+
+    if (!this.store) {
+      return;
+    }
+
+    if (!token) {
       return;
     }
     
-    const baseUrl = process.env.EXPO_PUBLIC_BASE_URL ?? 'https://focs.site';
+    const signalrUrl = 'https://focs.site/notification';
 
     this.connection = new signalR.HubConnectionBuilder()
-      .withUrl(`${baseUrl}/notification`, {
-        accessTokenFactory: () => token,
+      .withUrl(signalrUrl, {
+        transport: signalR.HttpTransportType.LongPolling,
+        accessTokenFactory: () => {
+          return token;
+        },
       })
-      .withAutomaticReconnect()
+      .withAutomaticReconnect([0, 2000, 10000, 30000])
       .build();
 
     this.connection.on('ReceiveNotification', (notification: StaffNotification) => {
       this.store.dispatch(addNotification(notification));
     });
 
+    this.connection.on('KitchenReady', (data: any) => {
+      const notification: StaffNotification = {
+        id: data.id || this.generateGuid(),
+        title: data.title || 'Kitchen Ready',
+        message: data.message || 'Food is ready for pickup',
+        type: 'KITCHEN_READY',
+        priority: 'HIGH',
+        isRead: false,
+        timestamp: new Date().toISOString(),
+        tableNumber: data.table_id ? parseInt(data.table_id) : undefined,
+      };
+      this.store.dispatch(addNotification(notification));
+    });
+
+    this.connection.on('KitchenCallStaff', (data: any) => {
+      const notification: StaffNotification = {
+        id: data.id || this.generateGuid(),
+        title: data.title || 'Kitchen Call Staff',
+        message: data.message || 'Kitchen needs staff assistance',
+        type: 'CUSTOMER_REQUEST',
+        priority: 'URGENT',
+        isRead: false,
+        timestamp: new Date().toISOString(),
+        tableNumber: data.table_id ? parseInt(data.table_id) : undefined,
+      };
+      this.store.dispatch(addNotification(notification));
+    });
+
+    this.connection.on('CustomerCallStaff', (data: any) => {
+      const notification: StaffNotification = {
+        id: data.id || this.generateGuid(),
+        title: data.title || 'Customer Call Staff',
+        message: data.message || 'Customer is calling for staff',
+        type: 'CUSTOMER_REQUEST',
+        priority: 'HIGH',
+        isRead: false,
+        timestamp: new Date().toISOString(),
+        tableNumber: data.table_id ? parseInt(data.table_id) : undefined,
+      };
+      this.store.dispatch(addNotification(notification));
+    });
+
+    this.connection.on('NewOrder', (data: any) => {
+      const notification: StaffNotification = {
+        id: data.id || this.generateGuid(),
+        title: data.title || 'New Order',
+        message: data.message || 'You have a new order',
+        type: 'NEW_ORDER',
+        priority: 'HIGH',
+        isRead: false,
+        timestamp: new Date().toISOString(),
+        tableNumber: data.table_id ? parseInt(data.table_id) : undefined,
+      };
+      this.store.dispatch(addNotification(notification));
+    });
+
+    this.connection.onreconnecting(() => {
+    });
+
+    this.connection.onreconnected(() => {
+    });
+
+    this.connection.onclose(() => {
+    });
+
     this.connection
       .start()
-      .then(() => console.log('SignalR Connected.'))
-      .catch((err) => console.error('SignalR Connection Error: ', err));
+      .then(() => {
+      })
+      .catch(() => {
+      });
   }
 
   public disconnect() {
-    if (this.useMockData) {
-      this.disconnectMock();
-      return;
-    }
     if (this.connection) {
       this.connection.stop();
       this.connection = null;
     }
   }
 
-  private connectMock() {
-    console.log('Starting mock SignalR connection. Notifications will be generated every 10 seconds.');
-    if (this.mockTimer) {
-      clearInterval(this.mockTimer);
-    }
-    this.mockTimer = setInterval(() => {
-      const mockNotification = this.generateMockNotification();
-      console.log('Generated mock notification:', mockNotification);
-      if (this.store) {
-        this.store.dispatch(addNotification(mockNotification));
-      }
-    }, 10000);
+  public getConnectionState(): string {
+    return this.connection?.state?.toString() || 'Not Connected';
   }
 
-  private disconnectMock() {
-    if (this.mockTimer) {
-      clearInterval(this.mockTimer);
-      this.mockTimer = null;
-      console.log('Stopped mock SignalR connection.');
-    }
+  public isConnected(): boolean {
+    return this.connection?.state === signalR.HubConnectionState.Connected;
   }
 
-  private generateMockNotification(): StaffNotification {
-    const types: StaffNotification['type'][] = [
-      'NEW_ORDER',
-      'CUSTOMER_REQUEST',
-      'TABLE_STATUS',
-      'KITCHEN_READY',
-      'PAYMENT',
-      'SYSTEM',
-    ];
-    const type = types[Math.floor(Math.random() * types.length)];
-    const priorities: StaffNotification['priority'][] = ['URGENT', 'HIGH', 'MEDIUM', 'LOW'];
-    const priority = priorities[Math.floor(Math.random() * priorities.length)];
-    const randomId = Math.floor(Math.random() * 1000);
-    return {
-      id: `mock-${Date.now()}`,
-      title: `Mock Notification ${randomId}`,
-      message: `This is a mock message of type: ${type}`,
-      timestamp: new Date().toISOString(),
-      isRead: false,
-      type,
-      priority,
-      tableNumber: Math.floor(Math.random() * 20) + 1,
-    };
+  private generateGuid(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0;
+      const v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
   }
 }
 
