@@ -18,6 +18,19 @@ export interface ProductionOrderListResponse {
 
 export type ProductionOrderStatus = 0 | 1 | 2 | 3;
 
+export interface KitchenOrderVariantItem {
+  variant_id: string;
+  variant_name: string;
+  note?: string;
+}
+
+export interface KitchenOrderDetailItem {
+  order_wrap_id: string;
+  menu_item_id: string;
+  menu_item_name: string;
+  variants: KitchenOrderVariantItem[];
+}
+
 export const getProductionOrderStatusText = (status: ProductionOrderStatus): string => {
   switch (status) {
     case 0:

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, FlatList, RefreshControl, Text } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 import ProductionOrderListItem from './ProductionOrderListItem';
 import { fetchProductionOrderListStart } from '../../store/slices/production/productionOrderSlice';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
@@ -13,6 +14,7 @@ import { spacing } from '../../utils/spacing';
 interface ProductionOrderListProps {}
 
 const ProductionOrderList: React.FC<ProductionOrderListProps> = () => {
+  const navigation = useNavigation<any>();
   const error = useAppSelector((state) => state.productionOrder.error);
   const storeId = useAppSelector((state) => state.productionOrder.storeId);
   const { isTablet, columns } = useResponsive();
@@ -43,7 +45,9 @@ const ProductionOrderList: React.FC<ProductionOrderListProps> = () => {
       item={item}
       isTablet={isTablet}
       onPress={() => {
-        
+        navigation.navigate('ProductionOrderDetail', { 
+          productionOrderCode: item.code 
+        });
       }}
     />
   );
