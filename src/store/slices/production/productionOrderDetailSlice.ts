@@ -8,6 +8,8 @@ interface ProductionOrderDetailState {
   productionOrder: ProductionOrder;
   items: KitchenOrderDetailItem[];
   refreshing: boolean;
+  changingStatus: boolean;
+  changingStatusOrderCode: string | null;
 }
 
 const initialState: ProductionOrderDetailState = {
@@ -17,6 +19,8 @@ const initialState: ProductionOrderDetailState = {
   productionOrder: {} as ProductionOrder,
   items: [],
   refreshing: false,
+  changingStatus: false,
+  changingStatusOrderCode: null,
 };
 
 const productionOrderDetailSlice = createSlice({
@@ -49,9 +53,31 @@ const productionOrderDetailSlice = createSlice({
       state.productionOrder = {} as ProductionOrder;
       state.items = [];
       state.refreshing = false;
+      state.changingStatus = false;
+      state.changingStatusOrderCode = null;
     },
     setRefreshing: (state, action: PayloadAction<boolean>) => {
       state.refreshing = action.payload;
+    },
+    changeProductionOrderStatusStart: (state, action: PayloadAction<{ orderWrapIds: string[]; status: number; orderCode?: string }>) => {
+      state.changingStatus = true;
+      state.changingStatusOrderCode = action.payload.orderCode || null;
+      state.error = null;
+    },
+    changeProductionOrderStatusByCodeStart: (state, action: PayloadAction<{ orderCode: string; status: number }>) => {
+      state.changingStatus = true;
+      state.changingStatusOrderCode = action.payload.orderCode;
+      state.error = null;
+    },
+    changeProductionOrderStatusSuccess: (state, action: PayloadAction<number>) => {
+      state.changingStatus = false;
+      state.changingStatusOrderCode = null;
+      state.productionOrder.status = action.payload as any;
+    },
+    changeProductionOrderStatusFailed: (state, action: PayloadAction<string>) => {
+      state.changingStatus = false;
+      state.changingStatusOrderCode = null;
+      state.error = action.payload;
     },
   },
 });
@@ -62,6 +88,10 @@ export const {
   fetchProductionOrderDetailFailed,
   resetProductionOrderDetail,
   setRefreshing,
+  changeProductionOrderStatusStart,
+  changeProductionOrderStatusByCodeStart,
+  changeProductionOrderStatusSuccess,
+  changeProductionOrderStatusFailed,
 } = productionOrderDetailSlice.actions;
 
 export default productionOrderDetailSlice.reducer;

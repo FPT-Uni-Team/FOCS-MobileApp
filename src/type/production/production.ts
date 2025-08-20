@@ -61,6 +61,23 @@ export const getProductionOrderStatusColor = (status: ProductionOrderStatus): st
   }
 };
 
+export const getNextProductionOrderStatus = (currentStatus: ProductionOrderStatus): ProductionOrderStatus | null => {
+  switch (currentStatus) {
+    case 0: // Pending -> In Progress
+      return 1;
+    case 1: // In Progress -> Completed
+      return 2;
+    case 2: // Completed (no next status)
+    case 3: // Cancelled (no next status)
+    default:
+      return null;
+  }
+};
+
+export const canAdvanceToNextStatus = (status: ProductionOrderStatus): boolean => {
+  return getNextProductionOrderStatus(status) !== null;
+};
+
 export interface ProductionOrderListState {
   items: ProductionOrder[];
   loading: boolean;
