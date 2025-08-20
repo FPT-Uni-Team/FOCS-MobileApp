@@ -8,13 +8,14 @@ export interface MenuListDataType {
   menuDescription: string;
   menuBasePrice: number;
   isAvailable: boolean;
+  menuImageUrl?: string;
 }
 
 export interface MenuItem {
   id?: string;
   name?: string;
   description?: string;
-  images?: any[];
+  images?: string[];
   base_price?: number;
   is_available?: boolean;
   categories?: CategoryListDataType[];

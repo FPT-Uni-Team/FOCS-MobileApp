@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Dimensions, TouchableOpacity, Modal, ScrollView } from 'react-native';
 import { Text } from 'react-native-paper';
 import { Image } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from '../Icon/Icon';
 import Colors from '../../../utils/Colors';
 import { spacing } from '../../../utils/spacing';
 
@@ -61,7 +61,7 @@ const ImageShowGrid: React.FC<ImageShowGridProps> = ({ initialImages }) => {
                   <Image source={{ uri: image.url }} style={styles.image} resizeMode="cover" />
                   {image.is_main && (
                     <View style={styles.mainBadge}>
-                      <Icon name="star" size={16} color="#FFD700" />
+                                             <Icon name="star" size={16} color="#FFD700" />
                     </View>
                   )}
                 </>
@@ -95,7 +95,7 @@ const ImageShowGrid: React.FC<ImageShowGridProps> = ({ initialImages }) => {
                   <Image source={{ uri: image.url }} style={styles.fullImage} resizeMode="contain" />
                   {image.is_main && (
                     <View style={styles.fullMainBadge}>
-                      <Icon name="star" size={20} color="#FFD700" />
+                                             <Icon name="star" size={20} color="#FFD700" />
                       <Text style={styles.mainText}>Main Image</Text>
                     </View>
                   )}
@@ -103,7 +103,7 @@ const ImageShowGrid: React.FC<ImageShowGridProps> = ({ initialImages }) => {
               ))}
             </ScrollView>
             <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
-              <Icon name="close" size={24} color="#fff" />
+                             <Icon name="close" size={24} color="#fff" />
             </TouchableOpacity>
           </View>
         </View>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from '../Icon/Icon';
 import { useAppSelector } from '../../../hooks/redux';
 import Colors from '../../../utils/Colors';
 import { spacing, ICON_SIZES, LAYOUT } from '../../../utils/theme';
@@ -13,6 +13,8 @@ const MENU: MenuItem[] = [
   { key: 'table', icon: 'table-furniture' },
   { key: 'order', icon: 'receipt' },
   { key: 'menu', icon: 'silverware-fork-knife' },
+  { key: 'production', icon: 'chef-hat' },
+  { key: 'cart', icon: 'cart' },
   { key: 'notification', icon: 'bell' },
   { key: 'profile', icon: 'account' },
 ];
@@ -24,6 +26,7 @@ interface Props {
 
 const BottomNav: React.FC<Props> = ({ selected, onSelect }) => {
   const unreadCount = useAppSelector((state) => state.notification.unreadCount);
+  const cartItemCount = useAppSelector((state: any) => state.cartItem.totalItems);
 
   return (
     <View style={styles.container}>
@@ -32,15 +35,22 @@ const BottomNav: React.FC<Props> = ({ selected, onSelect }) => {
         return (
           <TouchableOpacity key={m.key} style={styles.item} onPress={() => onSelect(m.key)}>
             <View style={styles.iconContainer}>
-              <Icon 
-                name={m.icon} 
-                size={ICON_SIZES.xl} 
-                color={active ? Colors.primary : Colors.textMuted} 
-              />
+                             <Icon 
+                 name={m.icon} 
+                 size={ICON_SIZES.xl} 
+                 color={active ? Colors.primary : Colors.textMuted} 
+               />
               {m.key === 'notification' && unreadCount > 0 && (
                 <View style={styles.badge}>
                   <Text style={styles.badgeText}>
                     {unreadCount > 99 ? '99+' : unreadCount}
+                  </Text>
+                </View>
+              )}
+              {m.key === 'cart' && cartItemCount > 0 && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>
+                    {cartItemCount > 99 ? '99+' : cartItemCount}
                   </Text>
                 </View>
               )}

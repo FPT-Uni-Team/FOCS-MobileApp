@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Text, IconButton } from 'react-native-paper';
+import { Text } from 'react-native-paper';
+import Icon from '../Icon/Icon';
 import Colors from '../../../utils/Colors';
 import { typography } from '../../../utils/theme';
 
@@ -23,12 +24,13 @@ const EmptyState: React.FC<EmptyStateProps> = ({
 }) => {
   return (
     <View style={[styles.container, style]}>
-      <IconButton 
-        icon={icon} 
-        size={iconSize} 
-        iconColor={iconColor}
-        style={styles.icon}
-      />
+      <View style={styles.icon}>
+        <Icon 
+          name={icon} 
+          size={iconSize} 
+          color={iconColor}
+        />
+      </View>
       <Text style={styles.title}>
         {title}
       </Text>

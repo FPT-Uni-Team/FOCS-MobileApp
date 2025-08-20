@@ -3,6 +3,7 @@ import type {
   TableDTO,
   TableListParams,
   TableListState,
+  TableStatus,
 } from '../../../type/table/table';
 
 const initialState: TableListState = {
@@ -10,8 +11,6 @@ const initialState: TableListState = {
   total: 0,
   page: 1,
   page_size: 10,
-  search_by: '',
-  search_value: '',
   sort_by: '',
   sort_order: undefined,
   filters: {},
@@ -49,6 +48,27 @@ const tableListSlice = createSlice({
       state.loading = false;
     },
     clearTableState: () => initialState,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    changeTableStatusRequest(state, _action: PayloadAction<{ tableId: string; storeId: string; status: TableStatus }>) {
+      state.loading = true;
+      state.error = null;
+    },
+    changeTableStatusSuccess(
+      state,
+      action: PayloadAction<{ tableId: string; status: TableStatus }>
+    ) {
+      state.loading = false;
+      const tableIndex = state.items.findIndex(
+        (table) => table.tableId === action.payload.tableId
+      );
+      if (tableIndex !== -1) {
+        state.items[tableIndex].status = action.payload.status;
+      }
+    },
+    changeTableStatusFailure(state, action: PayloadAction<{ error: string }>) {
+      state.loading = false;
+      state.error = action.payload.error;
+    },
   },
 });
 
@@ -58,6 +78,9 @@ export const {
   tableListFailure,
   setTableParams,
   clearTableState,
+  changeTableStatusRequest,
+  changeTableStatusSuccess,
+  changeTableStatusFailure,
 } = tableListSlice.actions;
 
 export default tableListSlice.reducer; 

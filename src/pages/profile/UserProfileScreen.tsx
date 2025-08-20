@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { Text, Avatar, Card, List, Button } from 'react-native-paper';
+import Icon from '../../components/common/Icon/Icon';
 import { useAppSelector, useAppDispatch } from '../../hooks/redux';
 import { logout } from '../../store/slices/auth/authSlice';
 import Colors from '../../utils/Colors';
@@ -36,23 +37,23 @@ const UserProfileScreen: React.FC = () => {
             <List.Subheader>Account</List.Subheader>
             <List.Item
               title="Personal Information"
-              left={props => <List.Icon {...props} icon="account" />}
-              right={props => <List.Icon {...props} icon="chevron-right" />}
+              left={() => <Icon name="account" size={24} color="#666" />}
+              right={() => <Icon name="chevron-right" size={24} color="#666" />}
             />
             <List.Item
               title="Settings"
-              left={props => <List.Icon {...props} icon="cog" />}
-              right={props => <List.Icon {...props} icon="chevron-right" />}
+              left={() => <Icon name="cog" size={24} color="#666" />}
+              right={() => <Icon name="chevron-right" size={24} color="#666" />}
             />
             <List.Item
               title="Help & Support"
-              left={props => <List.Icon {...props} icon="help-circle" />}
-              right={props => <List.Icon {...props} icon="chevron-right" />}
+              left={() => <Icon name="help-circle" size={24} color="#666" />}
+              right={() => <Icon name="chevron-right" size={24} color="#666" />}
             />
             <List.Item
               title="About"
-              left={props => <List.Icon {...props} icon="information" />}
-              right={props => <List.Icon {...props} icon="chevron-right" />}
+              left={() => <Icon name="information" size={24} color="#666" />}
+              right={() => <Icon name="chevron-right" size={24} color="#666" />}
             />
           </List.Section>
         </Card.Content>

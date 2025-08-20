@@ -12,6 +12,11 @@ import NotificationScreen from '../pages/notification/NotificationScreen';
 import UserProfileScreen from '../pages/profile/UserProfileScreen';
 import BottomNav from '../components/common/BottomNav/BottomNav';
 import MenuItemDetailScreen from '../pages/menu/MenuItemDetailScreen';
+import OrderDetailScreen from '../pages/order/OrderDetailScreen';
+import CheckoutScreen from '../pages/checkout/CheckoutScreen';
+import CartScreen from '../pages/cart/CartScreen';
+import ProductionOrderListScreen from '../pages/production/ProductionOrderListScreen';
+import ProductionOrderDetailScreen from '../pages/production/ProductionOrderDetailScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -48,6 +53,12 @@ const MainAppTabs = () => (
         case 'MenuItems':
           selectedKey = 'menu';
           break;
+        case 'Production':
+          selectedKey = 'production';
+          break;
+        case 'Cart':
+          selectedKey = 'cart';
+          break;
         case 'Notifications':
           selectedKey = 'notification';
           break;
@@ -64,6 +75,8 @@ const MainAppTabs = () => (
               'table': 'Tables',
               'order': 'Orders',
               'menu': 'MenuItems',
+              'production': 'Production',
+              'cart': 'Cart',
               'notification': 'Notifications',
               'profile': 'Profile',
             };
@@ -77,6 +90,8 @@ const MainAppTabs = () => (
     <Tab.Screen name="Tables" component={TableListScreen} />
     <Tab.Screen name="Orders" component={OrderListScreen} />
     <Tab.Screen name="MenuItems" component={MenuItemListScreen} />
+    <Tab.Screen name="Production" component={ProductionOrderListScreen} />
+    <Tab.Screen name="Cart" component={CartScreen} />
     <Tab.Screen name="Notifications" component={NotificationWrapper} />
     <Tab.Screen name="Profile" component={UserProfileScreen} />
   </Tab.Navigator>
@@ -99,6 +114,10 @@ const AppNavigator = () => {
         <>
           <Stack.Screen name="MainApp" component={MainAppTabs} />
           <Stack.Screen name="MenuItemDetail" component={MenuItemDetailScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="OrderDetail" component={OrderDetailScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="Checkout" component={CheckoutScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="ProductionOrders" component={ProductionOrderListScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="ProductionOrderDetail" component={ProductionOrderDetailScreen} options={{ headerShown: false }} />
         </>
       ) : (
         <>
