@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { IconButton, Text } from 'react-native-paper';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text } from 'react-native-paper';
+import Icon from '../Icon/Icon';
 import Colors from '../../../utils/Colors';
 
 interface Props {
@@ -28,17 +29,20 @@ const Pagination: React.FC<Props> = ({ currentPage, totalPages, onPageChange }) 
 
   return (
     <View style={styles.container}>
-      <IconButton
-        icon="chevron-left"
-        size={24}
+      <TouchableOpacity
         onPress={handlePrev}
         disabled={currentPage === 1}
         style={[
           styles.button,
           currentPage === 1 && styles.buttonDisabled
         ]}
-        iconColor={currentPage === 1 ? Colors.textDisabled : Colors.primary}
-      />
+      >
+        <Icon 
+          name="chevron-left" 
+          size={24} 
+          color={currentPage === 1 ? Colors.textDisabled : Colors.primary} 
+        />
+      </TouchableOpacity>
       
       <View style={styles.pageInfo}>
         <Text style={styles.pageNumber}>{currentPage}</Text>
@@ -46,17 +50,20 @@ const Pagination: React.FC<Props> = ({ currentPage, totalPages, onPageChange }) 
         <Text style={styles.totalPages}>{totalPages}</Text>
       </View>
       
-      <IconButton
-        icon="chevron-right"
-        size={24}
+      <TouchableOpacity
         onPress={handleNext}
         disabled={currentPage === totalPages}
         style={[
           styles.button,
           currentPage === totalPages && styles.buttonDisabled
         ]}
-        iconColor={currentPage === totalPages ? Colors.textDisabled : Colors.primary}
-      />
+      >
+        <Icon 
+          name="chevron-right" 
+          size={24} 
+          color={currentPage === totalPages ? Colors.textDisabled : Colors.primary} 
+        />
+      </TouchableOpacity>
     </View>
   );
 };

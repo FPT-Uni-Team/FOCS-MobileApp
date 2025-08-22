@@ -25,26 +25,36 @@ const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
-    fetchOrdersStart(state, action: PayloadAction<Partial<OrderListParams> | undefined>) {
+    fetchOrderListStart(state, action: PayloadAction<OrderListParams>) {
       state.loading = true;
       state.error = null;
-      const newParams = { ...state.params, ...(action.payload || {}) };
-      state.params = {
-        page: newParams.page ?? 1,
-        page_size: newParams.page_size ?? 10,
-      };
+      const nextParams = action.payload;
+      if (nextParams.page === 1) {
+        state.items = [];
+      }
+      state.params = nextParams;
     },
-    fetchOrdersSuccess(state, action: PayloadAction<{ items: OrderDTO[]; total: number }>) {
+    fetchOrderListSuccess(state, action: PayloadAction<{ items: OrderDTO[]; total: number }>) {
       state.loading = false;
       state.error = null;
-      state.items = action.payload.items;
+      if (state.params.page === 1) {
+        
+        state.items = action.payload.items;
+      } else {
+        
+        const existingIds = new Set(state.items.map(item => item.id));
+        const newItems = action.payload.items.filter(item => !existingIds.has(item.id));
+        state.items.push(...newItems);
+      }
       state.total = action.payload.total;
     },
-    fetchOrdersFailure(state, action: PayloadAction<string>) {
+    fetchOrderListFailure(state, action: PayloadAction<string>) {
       state.loading = false;
       state.error = action.payload;
-      state.items = [];
-      state.total = 0;
+      if (state.params.page === 1) {
+        state.items = [];
+        state.total = 0;
+      }
     },
     resetOrderState(state) {
       state.loading = false;
@@ -57,9 +67,9 @@ const orderSlice = createSlice({
 });
 
 export const {
-  fetchOrdersStart,
-  fetchOrdersSuccess,
-  fetchOrdersFailure,
+  fetchOrderListStart,
+  fetchOrderListSuccess,
+  fetchOrderListFailure,
   resetOrderState,
 } = orderSlice.actions;
 
