@@ -28,19 +28,33 @@ const orderSlice = createSlice({
     fetchOrderListStart(state, action: PayloadAction<OrderListParams>) {
       state.loading = true;
       state.error = null;
-      state.params = action.payload;
+      const nextParams = action.payload;
+      if (nextParams.page === 1) {
+        state.items = [];
+      }
+      state.params = nextParams;
     },
     fetchOrderListSuccess(state, action: PayloadAction<{ items: OrderDTO[]; total: number }>) {
       state.loading = false;
       state.error = null;
-      state.items = action.payload.items;
+      if (state.params.page === 1) {
+        
+        state.items = action.payload.items;
+      } else {
+        
+        const existingIds = new Set(state.items.map(item => item.id));
+        const newItems = action.payload.items.filter(item => !existingIds.has(item.id));
+        state.items.push(...newItems);
+      }
       state.total = action.payload.total;
     },
     fetchOrderListFailure(state, action: PayloadAction<string>) {
       state.loading = false;
       state.error = action.payload;
-      state.items = [];
-      state.total = 0;
+      if (state.params.page === 1) {
+        state.items = [];
+        state.total = 0;
+      }
     },
     resetOrderState(state) {
       state.loading = false;
