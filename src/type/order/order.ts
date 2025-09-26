@@ -1,7 +1,9 @@
 export interface OrderDetail {
   id: string;
-  order_id: string;
   menu_item_id: string;
+  menu_item_name: string;
+  variant_id: string;
+  variant_name: string;
   quantity: number;
   unit_price: number;
   total_price: number;

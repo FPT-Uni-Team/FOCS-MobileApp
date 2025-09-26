@@ -1,25 +1,12 @@
 import { takeLatest } from 'redux-saga/effects';
-import * as Notifications from 'expo-notifications';
 import { addNotification } from '../../slices/notification/notificationSlice';
-import type { PayloadAction } from '@reduxjs/toolkit';
-import type { StaffNotification } from '../../../type/notification/notification';
 import { call } from 'redux-saga/effects';
+import soundService from '../../../services/soundService';
 
-function* showLocalNotification(action: PayloadAction<StaffNotification>) {
-  const { title, message } = action.payload;
+function* showLocalNotification() {
   try {
-    yield call(() =>
-      Notifications.scheduleNotificationAsync({
-        content: {
-          title,
-          body: message,
-          sound: 'default',
-        },
-        trigger: null,
-      }),
-    );
+    yield call([soundService, soundService.playSound]);
   } catch (e) {
-    console.warn('Cannot present notification', e);
   }
 }
 

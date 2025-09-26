@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "367204991903",
+    "project_id": "focs-e053a",
+    "storage_bucket": "focs-e053a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:367204991903:android:a8b24f073d882bb7f6f3aa",
+        "android_client_info": {
+          "package_name": "com.anonymous.mobileadminsite"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9IGNhRWpcF5z_uG6GFPGVN9KjUXqklts"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+} 

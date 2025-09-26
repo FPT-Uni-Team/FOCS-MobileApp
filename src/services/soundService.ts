@@ -1,54 +1,57 @@
-import { Audio } from 'expo-av';
+import Sound from 'react-native-sound';
 
 class SoundService {
-  private sound: Audio.Sound | null = null;
+  private sound: Sound | null = null;
+  private isLoaded: boolean = false;
 
   async loadSound() {
-    if (this.sound) {
+    if (this.isLoaded) {
       return;
     }
+    
     try {
-      await Audio.setAudioModeAsync({
-        playsInSilentModeIOS: true,
-        staysActiveInBackground: false,
-      });
+      Sound.setCategory('Playback');
 
-      const { sound } = await Audio.Sound.createAsync(
-         require('../../assets/sounds/notification.mp3')
-      );
-      this.sound = sound;
+      this.sound = new Sound('notification.mp3', Sound.MAIN_BUNDLE, (error) => {
+        if (error) {
+          this.sound = null;
+          this.isLoaded = false;
+        } else {
+          this.isLoaded = true;
+        }
+      });
     } catch (error) {
-      console.error('Failed to load sound', error);
+      this.isLoaded = false;
     }
   }
 
   async playSound() {
     try {
-      await Audio.setAudioModeAsync({
-        playsInSilentModeIOS: true,
-        staysActiveInBackground: false,
-      });
-
-     
-      if (this.sound) {
-        await this.sound.unloadAsync();
-        this.sound = null;
+      if (!this.isLoaded) {
+        await this.loadSound();
       }
 
-      const { sound } = await Audio.Sound.createAsync(
-        require('../../assets/sounds/notification.mp3'),
-        { shouldPlay: true }, 
-      );
-
-      this.sound = sound;
+      if (this.sound && this.isLoaded) {
+        this.sound.play(() => {
+        });
+      } else {
+        const sound = new Sound('notification.mp3', Sound.MAIN_BUNDLE, (error) => {
+          if (error) {
+            return;
+          }
+          
+          sound.play(() => {
+            sound.release();
+          });
+        });
+      }
     } catch (error) {
-      console.error('Failed to play sound', error);
     }
   }
 
   async unloadSound() {
     if (this.sound) {
-      await this.sound.unloadAsync();
+      this.sound.release();
       this.sound = null;
     }
   }
