@@ -8,6 +8,7 @@ import menuItemSaga from './menu/menuItemSaga';
 import orderSaga from './order/orderSaga';
 import { watchCartSaga } from './cart/cartSaga';
 import { productionOrderSaga } from './production/productionOrderSaga';
+import { productionOrderDetailSaga } from './production/productionOrderDetailSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -20,5 +21,6 @@ export default function* rootSaga() {
     fork(orderSaga),
     fork(watchCartSaga),
     fork(productionOrderSaga),
+    fork(productionOrderDetailSaga),
   ]);
 }
