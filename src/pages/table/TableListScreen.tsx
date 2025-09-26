@@ -61,7 +61,7 @@ const TableListScreen = () => {
       <View style={styles.contentContainer}>
         <FlatList
           data={items}
-          renderItem={({ item }) => <TableCard item={item} />}
+          renderItem={({ item }) => <TableCard item={item} storeId={storeId} />}
           keyExtractor={(item) => item.tableId}
           numColumns={2}
           contentContainerStyle={styles.listContent}

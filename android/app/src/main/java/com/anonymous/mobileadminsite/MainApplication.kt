@@ -12,6 +12,7 @@ import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.soloader.OpenSourceMergedSoMapping
 import com.facebook.soloader.SoLoader
 
+
 class MainApplication : Application(), ReactApplication {
 
   override val reactNativeHost: ReactNativeHost = object : DefaultReactNativeHost(this) {
@@ -19,6 +20,7 @@ class MainApplication : Application(), ReactApplication {
       val packages = PackageList(this).packages
       // Packages that cannot be autolinked yet can be added manually here, for example:
       // packages.add(MyReactNativePackage())
+
       return packages
     }
 

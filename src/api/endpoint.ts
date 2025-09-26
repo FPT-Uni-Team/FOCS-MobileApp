@@ -9,6 +9,7 @@ const endpoints = {
   },
   table: {
     list: (storeId: string) => `/api/manager/tables?storeId=${storeId}`,
+    changeStatus: (tableId: string, storeId: string) => `/api/manager/table/status?tableId=${tableId}&storeId=${storeId}`,
   },
   menuItem: {
     list: () => '/api/admin/menu-item/list',
@@ -21,6 +22,7 @@ const endpoints = {
   order: {
     list: () => '/api/cashier/orders',
     detail: (orderCode: string) => `/api/order/order-by-code/${orderCode}`,
+    changeStatus: (orderCode: string) => `/api/order/change-status/${orderCode}`,
   },
 };
 
@@ -33,6 +35,7 @@ export const API_ENDPOINTS = {
   },
   TABLE: {
     LIST: endpoints.table.list,
+    CHANGE_STATUS: endpoints.table.changeStatus,
   },
   MENU_ITEM: {
     LIST: endpoints.menuItem.list(),
@@ -45,6 +48,7 @@ export const API_ENDPOINTS = {
   ORDER: {
     LIST: endpoints.order.list(),
     DETAIL: endpoints.order.detail,
+    CHANGE_STATUS: endpoints.order.changeStatus,
   },
 };
 

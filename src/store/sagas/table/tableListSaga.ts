@@ -3,11 +3,20 @@ import {
   tableListRequest,
   tableListSuccess,
   tableListFailure,
+  changeTableStatusRequest,
+  changeTableStatusSuccess,
+  changeTableStatusFailure,
 } from '../../slices/table/tableListSlice';
-import { fetchTableList } from '../../../services/tableService';
+import { 
+  fetchTableList, 
+  changeTableStatus,
+  mapTableStatusFromApi 
+} from '../../../services/tableService';
 import type { RootState } from '../../store';
-import type { TableListParams } from '../../../type/table/table';
-import type { TableStatus } from '../../../type/table/table';
+import type { 
+  TableListParams, 
+  ChangeTableStatusParams 
+} from '../../../type/table/table';
 
 function* handleFetch(): Generator<any, void, any> {
   try {
@@ -27,7 +36,7 @@ function* handleFetch(): Generator<any, void, any> {
       tableId: it.id,
       tableNumber: String(it.table_number),
      
-      status: mapTableStatus(it.status),
+      status: mapTableStatusFromApi(it.status),
       capacity: it.capacity ?? undefined,
       note: it.note ?? undefined,
       createdAt: it.created_at ?? '',
@@ -45,17 +54,22 @@ function* handleFetch(): Generator<any, void, any> {
 }
 
 
-function mapTableStatus(apiStatus: number): TableStatus {
-  switch (apiStatus) {
-    case 0: return 'Available';
-    case 1: return 'Occupied';
-    case 2: return 'Reserved';
-    case 3: return 'Cleaning';
-    case 4: return 'OutOfService';
-    default: return 'Available';
+function* handleChangeStatus(action: { payload: ChangeTableStatusParams }): Generator<any, void, any> {
+  try {
+    yield call(changeTableStatus, action.payload);
+    yield put(changeTableStatusSuccess({ 
+      tableId: action.payload.tableId, 
+      status: action.payload.status 
+    }));
+    yield put(tableListRequest());
+  } catch (e: any) {
+    yield put(changeTableStatusFailure({
+      error: e?.response?.data?.message || e.message || 'Failed to change table status',
+    }));
   }
 }
 
 export default function* tableListSaga() {
   yield takeLatest([tableListRequest.type, 'tableList/setTableParams'], handleFetch);
+  yield takeLatest(changeTableStatusRequest.type, handleChangeStatus);
 } 

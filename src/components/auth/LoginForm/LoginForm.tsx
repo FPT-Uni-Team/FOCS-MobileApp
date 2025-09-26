@@ -5,7 +5,8 @@ import {
   TouchableOpacity,
   TextInput as RNTextInput,
 } from 'react-native';
-import { Button, Text, HelperText, IconButton } from 'react-native-paper';
+import { Button, Text, HelperText } from 'react-native-paper';
+import Icon from '../../common/Icon/Icon';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema, LoginFormData } from '../../../utils/validationSchemas';
@@ -44,12 +45,9 @@ const LoginForm: React.FC<LoginFormProps> = ({
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <IconButton
-          icon="arrow-left"
-          size={24}
-          onPress={onBackPress}
-          iconColor="#2c3e50"
-        />
+        <TouchableOpacity onPress={onBackPress} style={styles.backButton}>
+          <Icon name="arrow-left" size={24} color="#2c3e50" />
+        </TouchableOpacity>
       </View>
 
       <View style={styles.titleContainer}>
@@ -102,11 +100,10 @@ const LoginForm: React.FC<LoginFormProps> = ({
                 hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 disabled={loading}
               >
-                <IconButton
-                  icon={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                <Icon
+                  name={showPassword ? 'eye-off-outline' : 'eye-outline'}
                   size={20}
-                  iconColor="#6c757d"
-                  style={styles.passwordToggleIcon}
+                  color="#6c757d"
                 />
               </TouchableOpacity>
               <HelperText type="error" visible={!!errors.password}>
@@ -137,24 +134,15 @@ const LoginForm: React.FC<LoginFormProps> = ({
         <View style={styles.socialContainer}>
           <Text style={styles.socialText}>Or Login with</Text>
           <View style={styles.socialButtons}>
-            <IconButton
-              icon="facebook"
-              size={24}
-              iconColor="#1877f2"
-              style={styles.socialButton}
-            />
-            <IconButton
-              icon="google"
-              size={24}
-              iconColor="#ea4335"
-              style={styles.socialButton}
-            />
-            <IconButton
-              icon="apple"
-              size={24}
-              iconColor="#000000"
-              style={styles.socialButton}
-            />
+            <TouchableOpacity style={[styles.socialButton, { backgroundColor: '#1877f2' }]}>
+              <Text style={[styles.socialIcon, { color: 'white' }]}>f</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.socialButton, { backgroundColor: '#ea4335' }]}>
+              <Text style={[styles.socialIcon, { color: 'white' }]}>G</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.socialButton, { backgroundColor: '#000000' }]}>
+              <Text style={[styles.socialIcon, { color: 'white' }]}>A</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -178,6 +166,12 @@ const styles = StyleSheet.create({
   header: {
     paddingTop: 60,
     paddingBottom: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  backButton: {
+    padding: 8,
+    alignSelf: 'flex-start',
   },
   titleContainer: {
     marginBottom: 40,
@@ -254,6 +248,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e9ecef',
     marginHorizontal: 7.5,
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  socialIcon: {
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   registerContainer: {
     flexDirection: 'row',
@@ -276,10 +278,7 @@ const styles = StyleSheet.create({
     height: 56,
     justifyContent: 'center',
   },
-  passwordToggleIcon: {
-    margin: 0,
-    backgroundColor: 'transparent',
-  },
+
 });
 
 export default LoginForm;
