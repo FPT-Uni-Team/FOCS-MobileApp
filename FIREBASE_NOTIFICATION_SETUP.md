@@ -62,6 +62,9 @@ NotificationTester.logFirebaseConfig()
 
 ### Action Types Supported
 - `New Ordered`: Creates order notification, navigates to Orders screen
+- `Kitchen Ready`: Creates kitchen ready notification, navigates to Production Orders screen
+- `Kitchen Call Staff`: Creates urgent kitchen call notification, navigates to Production Orders screen
+- `Customer Call Staff`: Creates customer call notification, navigates to Tables screen
 - `New Notify`: Creates system notification, navigates to Notifications screen
 
 ### Integration Features
@@ -99,6 +102,9 @@ POST /api/auth/mobile-token
 
 ### Action Types
 - `New Ordered` - For new order notifications
+- `Kitchen Ready` - For kitchen ready notifications
+- `Kitchen Call Staff` - For kitchen calling staff notifications
+- `Customer Call Staff` - For customer calling staff notifications
 - `New Notify` - For general system notifications
 
 ## 📋 Firebase Console Setup

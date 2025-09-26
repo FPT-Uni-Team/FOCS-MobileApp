@@ -13,6 +13,7 @@ const MENU: MenuItem[] = [
   { key: 'table', icon: 'table-furniture' },
   { key: 'order', icon: 'receipt' },
   { key: 'menu', icon: 'silverware-fork-knife' },
+  { key: 'production', icon: 'chef-hat' },
   { key: 'cart', icon: 'cart' },
   { key: 'notification', icon: 'bell' },
   { key: 'profile', icon: 'account' },

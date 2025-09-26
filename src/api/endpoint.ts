@@ -29,6 +29,9 @@ const endpoints = {
     create_cart: () => `/api/order`,
     payment: () => '/api/payment',
   },
+  production: {
+    kitchenOrders: () => '/api/KitchenOrder',
+  },
 };
 
 export const API_ENDPOINTS = {
@@ -59,6 +62,9 @@ export const API_ENDPOINTS = {
     APPLY_DISCOUNT: endpoints.checkout.apply_discount,
     CREATE_CART: endpoints.checkout.create_cart(),
     PAYMENT: endpoints.checkout.payment(),
+  },
+  PRODUCTION: {
+    KITCHEN_ORDERS: endpoints.production.kitchenOrders(),
   },
 };
 

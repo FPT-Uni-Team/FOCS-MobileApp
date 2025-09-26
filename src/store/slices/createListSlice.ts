@@ -28,7 +28,6 @@ export const createListSlice = <T>(name: string) => {
         const newParams = action.payload || initialState.params;
         
         if (newParams.page === 1 || 
-            newParams.search_value !== state.params.search_value ||
             JSON.stringify(newParams.filters) !== JSON.stringify(state.params.filters)) {
           state.items = [];
         }

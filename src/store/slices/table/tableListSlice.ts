@@ -11,8 +11,6 @@ const initialState: TableListState = {
   total: 0,
   page: 1,
   page_size: 10,
-  search_by: '',
-  search_value: '',
   sort_by: '',
   sort_order: undefined,
   filters: {},

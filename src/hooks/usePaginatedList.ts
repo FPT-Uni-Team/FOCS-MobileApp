@@ -54,11 +54,6 @@ export const usePaginatedList = <T>({
     }
   }, [loading, loadingMore, items.length, total, params, fetchData]);
 
-  const updateParams = useCallback((updater: (prev: ListPageParams) => ListPageParams) => {
-    const newParams = updater(params);
-    setParams(newParams);
-  }, [params]);
-
   useEffect(() => {
     fetchData(params);
   }, [params, fetchData]);
@@ -79,7 +74,6 @@ export const usePaginatedList = <T>({
     params,
     handleRefresh,
     handleLoadMore,
-    updateParams,
     fetchData,
   };
 }; 
