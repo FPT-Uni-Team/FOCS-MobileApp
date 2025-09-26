@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Appbar, ActivityIndicator } from 'react-native-paper';
-import { TouchableOpacity } from 'react-native';
 import Icon from '../../components/common/Icon/Icon';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -21,6 +20,8 @@ const MenuItemDetailScreen: React.FC = () => {
   const { menuItemId } = route.params as RouteParams;
 
   const { loading, menuItem } = useSelector((state: RootState) => state.menuItemDetail);
+
+
 
   if (loading && !menuItem.id) {
     return (
@@ -70,6 +71,7 @@ const styles = StyleSheet.create({
     padding: 8,
     marginLeft: 8,
   },
+
 });
 
 export default MenuItemDetailScreen; 

@@ -3,7 +3,11 @@ import endpoints from '../api/endpoint';
 import type { OrderListParams, OrderListResponse, OrderDTO, ChangeOrderStatusRequest } from '../type/order/order';
 
 export const fetchOrderList = async (params: OrderListParams): Promise<{ data: OrderListResponse }> => {
-  const response = await axiosClient.post(endpoints.order.list(), params);
+  const headers = {
+    'actorId': '1',
+  };
+  
+  const response = await axiosClient.post(endpoints.order.list(), params, { headers });
   return response;
 };
 

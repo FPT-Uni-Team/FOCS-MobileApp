@@ -12,4 +12,16 @@ export const loginSchema = z.object({
 });
 
 export type LoginFormData = z.infer<typeof loginSchema>;
+
+export const checkoutSchema = z.object({
+  customerName: z
+    .string()
+    .min(1, 'Customer name is required')
+    .max(30, 'Name is too long'),
+  customerPhone: z
+    .string()
+    .regex(/^[0-9]{9,11}$/, 'Invalid phone number format'),
+});
+
+export type CheckoutFormData = z.infer<typeof checkoutSchema>;
  

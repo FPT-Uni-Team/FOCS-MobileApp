@@ -13,6 +13,7 @@ const MENU: MenuItem[] = [
   { key: 'table', icon: 'table-furniture' },
   { key: 'order', icon: 'receipt' },
   { key: 'menu', icon: 'silverware-fork-knife' },
+  { key: 'cart', icon: 'cart' },
   { key: 'notification', icon: 'bell' },
   { key: 'profile', icon: 'account' },
 ];
@@ -24,6 +25,7 @@ interface Props {
 
 const BottomNav: React.FC<Props> = ({ selected, onSelect }) => {
   const unreadCount = useAppSelector((state) => state.notification.unreadCount);
+  const cartItemCount = useAppSelector((state: any) => state.cartItem.totalItems);
 
   return (
     <View style={styles.container}>
@@ -41,6 +43,13 @@ const BottomNav: React.FC<Props> = ({ selected, onSelect }) => {
                 <View style={styles.badge}>
                   <Text style={styles.badgeText}>
                     {unreadCount > 99 ? '99+' : unreadCount}
+                  </Text>
+                </View>
+              )}
+              {m.key === 'cart' && cartItemCount > 0 && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>
+                    {cartItemCount > 99 ? '99+' : cartItemCount}
                   </Text>
                 </View>
               )}
