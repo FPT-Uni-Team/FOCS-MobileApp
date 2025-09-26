@@ -22,7 +22,15 @@ const productionOrderSlice = createSlice({
     fetchProductionOrderListSuccess: (state, action) => {
       state.loading = false;
       state.error = null;
-      state.items = action.payload.items;
+      const incoming = action.payload.items || [];
+      const merged = incoming.map((incomingItem: any) => {
+        const existing = state.items.find((it) => it.code === incomingItem.code);
+        if (!existing) return incomingItem;
+        const existingStatus = Number((existing as any).status ?? 0);
+        const incomingStatus = Number((incomingItem as any).status ?? 0);
+        return { ...incomingItem, status: (Math.max(existingStatus, incomingStatus) as any) };
+      });
+      state.items = merged;
       state.total = action.payload.total_count;
       state.page = action.payload.page_index;
       state.page_size = action.payload.page_size;
@@ -45,6 +53,13 @@ const productionOrderSlice = createSlice({
       state.total = 0;
       state.page = 1;
     },
+    updateProductionOrderStatus: (state, action: PayloadAction<{ code: string; status: number }>) => {
+      const { code, status } = action.payload;
+      const nextItems = state.items.map((it) =>
+        it.code === code ? ({ ...it, status } as any) : it
+      );
+      state.items = nextItems;
+    },
   },
 });
 
@@ -54,6 +69,7 @@ export const {
   fetchProductionOrderListFailure,
   setProductionOrderParams,
   clearProductionOrderList,
+  updateProductionOrderStatus,
 } = productionOrderSlice.actions;
 
 export default productionOrderSlice.reducer;

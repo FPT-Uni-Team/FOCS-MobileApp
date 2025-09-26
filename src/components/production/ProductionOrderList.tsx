@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, StyleSheet, FlatList, RefreshControl, Text } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
 import ProductionOrderListItem from './ProductionOrderListItem';
 import { fetchProductionOrderListStart } from '../../store/slices/production/productionOrderSlice';
+import { changeProductionOrderStatusByCodeStart } from '../../store/slices/production/productionOrderDetailSlice';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
 import { useAppSelector } from '../../hooks/redux';
 import { useResponsive } from '../../hooks/useResponsive';
 import type { ProductionOrder } from '../../type/production/production';
+import { getNextProductionOrderStatus } from '../../type/production/production';
 import Colors from '../../utils/Colors';
 import { spacing } from '../../utils/spacing';
 
@@ -15,8 +18,12 @@ interface ProductionOrderListProps {}
 
 const ProductionOrderList: React.FC<ProductionOrderListProps> = () => {
   const navigation = useNavigation<any>();
+  const dispatch = useDispatch();
   const error = useAppSelector((state) => state.productionOrder.error);
   const storeId = useAppSelector((state) => state.productionOrder.storeId);
+  const directItems = useAppSelector((state) => state.productionOrder.items);
+  const changingStatus = useAppSelector((state) => state.productionOrderDetail.changingStatus);
+  const changingStatusOrderCode = useAppSelector((state) => state.productionOrderDetail.changingStatusOrderCode);
   const { isTablet, columns } = useResponsive();
 
   const {
@@ -40,15 +47,30 @@ const ProductionOrderList: React.FC<ProductionOrderListProps> = () => {
     },
   });
 
+  
+  const actualData = directItems.length > 0 ? directItems : productionOrders;
+
+  const handleNextStatus = useCallback(async (item: ProductionOrder) => {
+    const nextStatus = getNextProductionOrderStatus(item.status);
+    if (nextStatus !== null) {
+      dispatch(changeProductionOrderStatusByCodeStart({
+        orderCode: item.code,
+        status: nextStatus,
+      }));
+    }
+  }, [dispatch]);
+
   const renderItem = ({ item }: { item: ProductionOrder }) => (
     <ProductionOrderListItem 
       item={item}
       isTablet={isTablet}
+      changingStatus={changingStatus && changingStatusOrderCode === item.code}
       onPress={() => {
         navigation.navigate('ProductionOrderDetail', { 
           productionOrderCode: item.code 
         });
       }}
+      onNextStatus={handleNextStatus}
     />
   );
 
@@ -73,7 +95,7 @@ const ProductionOrderList: React.FC<ProductionOrderListProps> = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={productionOrders}
+        data={actualData}
         renderItem={renderItem}
         keyExtractor={(item) => item.code}
         numColumns={columns}

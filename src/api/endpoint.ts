@@ -32,6 +32,7 @@ const endpoints = {
   production: {
     kitchenOrders: () => '/api/KitchenOrder',
     kitchenOrderDetail: (code: string) => `/api/KitchenOrder/${code}`,
+    changeStatus: () => '/api/KitchenOrder/change-status',
   },
 };
 
@@ -67,6 +68,7 @@ export const API_ENDPOINTS = {
   PRODUCTION: {
     KITCHEN_ORDERS: endpoints.production.kitchenOrders(),
     KITCHEN_ORDER_DETAIL: endpoints.production.kitchenOrderDetail,
+    CHANGE_STATUS: endpoints.production.changeStatus(),
   },
 };
 

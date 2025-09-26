@@ -1,22 +1,32 @@
 import React from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
-import { Text, Surface, Chip } from 'react-native-paper';
+import { Text, Surface, Chip, Button } from 'react-native-paper';
 import StatusDot from '../common/StatusDot/StatusDot';
 import { cardSpacing, spacing } from '../../utils/spacing';
 import Colors from '../../utils/Colors';
 import type { ProductionOrder } from '../../type/production/production';
 import { 
   getProductionOrderStatusText, 
-  getProductionOrderStatusColor 
+  getProductionOrderStatusColor,
+  getNextProductionOrderStatus,
+  canAdvanceToNextStatus,
 } from '../../type/production/production';
 
 interface ProductionOrderListItemProps {
   item: ProductionOrder;
   isTablet?: boolean;
   onPress?: () => void;
+  onNextStatus?: (item: ProductionOrder) => void;
+  changingStatus?: boolean;
 }
 
-const ProductionOrderListItem: React.FC<ProductionOrderListItemProps> = ({ item, isTablet = false, onPress }) => {
+const ProductionOrderListItem: React.FC<ProductionOrderListItemProps> = ({ 
+  item, 
+  isTablet = false, 
+  onPress, 
+  onNextStatus, 
+  changingStatus = false 
+}) => {
   const statusColor = getProductionOrderStatusColor(item.status);
   const statusText = getProductionOrderStatusText(item.status);
   const totalOrders = item.orders.length;
@@ -114,6 +124,22 @@ const ProductionOrderListItem: React.FC<ProductionOrderListItemProps> = ({ item,
                   </View>
                 )}
               </View>
+            </View>
+          )}
+
+          {canAdvanceToNextStatus(item.status) && onNextStatus && (
+            <View style={styles.buttonContainer}>
+              <Button
+                mode="contained"
+                onPress={() => onNextStatus(item)}
+                loading={changingStatus}
+                disabled={changingStatus}
+                style={styles.nextStatusButton}
+                labelStyle={styles.nextStatusButtonText}
+                compact
+              >
+                {changingStatus ? 'Updating...' : `Next: ${getProductionOrderStatusText(getNextProductionOrderStatus(item.status)!)}`}
+              </Button>
             </View>
           )}
         </View>
@@ -242,6 +268,21 @@ const styles = StyleSheet.create({
   moreText: {
     color: Colors.textSecondary,
     fontStyle: 'italic',
+    fontSize: 12,
+  },
+  buttonContainer: {
+    marginTop: spacing.s,
+    paddingTop: spacing.s,
+    borderTopWidth: 1,
+    borderTopColor: Colors.borderLight,
+  },
+  nextStatusButton: {
+    backgroundColor: Colors.primary,
+    borderRadius: spacing.xs,
+  },
+  nextStatusButtonText: {
+    color: Colors.backgroundPrimary,
+    fontWeight: '600',
     fontSize: 12,
   },
 });

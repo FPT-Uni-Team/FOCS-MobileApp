@@ -14,4 +14,22 @@ export const productionOrderService = {
     const response = await axiosClient.get(endpoints.production.kitchenOrderDetail(code), { headers });
     return response.data;
   },
+
+  changeStatus: async (orderWrapId: string, status: number, storeId?: string): Promise<boolean> => {
+    const headers = storeId ? { storeId } : {};
+    const response = await axiosClient.put(endpoints.production.changeStatus(), {
+      order_wrap_id: orderWrapId,
+      status: status
+    }, { headers });
+    return response.data;
+  },
+
+  changeStatusBatch: async (orderWrapIds: string[], status: number, storeId?: string): Promise<boolean> => {
+    const headers = storeId ? { storeId } : {};
+    const response = await axiosClient.put(endpoints.production.changeStatus(), {
+      order_wrap_ids: orderWrapIds,
+      status: status
+    }, { headers });
+    return response.data;
+  },
 };

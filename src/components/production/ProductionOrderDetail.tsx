@@ -1,11 +1,13 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, RefreshControl, ActivityIndicator } from 'react-native';
-import { Surface, Text, DataTable } from 'react-native-paper';
+import { Surface, Text, DataTable, Button } from 'react-native-paper';
 import Colors from '../../utils/Colors';
 import { spacing, cardSpacing } from '../../utils/spacing';
 import StatusChip from '../common/StatusChip/StatusChip';
 import { 
-  getProductionOrderStatusText, 
+  getProductionOrderStatusText,
+  getNextProductionOrderStatus,
+  canAdvanceToNextStatus,
 } from '../../type/production/production';
 import type { ProductionOrder, KitchenOrderDetailItem } from '../../type/production/production';
 
@@ -16,9 +18,20 @@ interface ProductionOrderDetailProps {
   error: string | null;
   onRefresh: () => void;
   items?: KitchenOrderDetailItem[];
+  changingStatus?: boolean;
+  onNextStatus?: () => void;
 }
 
-const ProductionOrderDetail: React.FC<ProductionOrderDetailProps> = ({ productionOrder, loading, refreshing, error, onRefresh, items = [] }) => {
+const ProductionOrderDetail: React.FC<ProductionOrderDetailProps> = ({ 
+  productionOrder, 
+  loading, 
+  refreshing, 
+  error, 
+  onRefresh, 
+  items = [], 
+  changingStatus = false, 
+  onNextStatus 
+}) => {
 
   if (loading || refreshing) {
     return (
@@ -73,6 +86,21 @@ const ProductionOrderDetail: React.FC<ProductionOrderDetailProps> = ({ productio
               isPositive={productionOrder.status === 2 || productionOrder.status === 1}
             />
           </View>
+
+          {canAdvanceToNextStatus(productionOrder.status) && onNextStatus && (
+            <View style={styles.buttonContainer}>
+              <Button
+                mode="contained"
+                onPress={onNextStatus}
+                loading={changingStatus}
+                disabled={changingStatus}
+                style={styles.nextStatusButton}
+                labelStyle={styles.nextStatusButtonText}
+              >
+                {changingStatus ? 'Updating...' : `Next Status: ${getProductionOrderStatusText(getNextProductionOrderStatus(productionOrder.status)!)}`}
+              </Button>
+            </View>
+          )}
         </View>
       </Surface>
 
@@ -197,6 +225,21 @@ const styles = StyleSheet.create({
     color: Colors.primary,
     textAlign: 'center',
     textDecorationLine: 'underline',
+  },
+  buttonContainer: {
+    marginTop: spacing.m,
+    paddingTop: spacing.m,
+    borderTopWidth: 1,
+    borderTopColor: Colors.borderLight,
+  },
+  nextStatusButton: {
+    backgroundColor: Colors.primary,
+    borderRadius: spacing.s,
+  },
+  nextStatusButtonText: {
+    color: Colors.backgroundPrimary,
+    fontWeight: '600',
+    fontSize: 14,
   },
 });
 
