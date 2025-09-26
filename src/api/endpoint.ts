@@ -22,6 +22,7 @@ const endpoints = {
   order: {
     list: () => '/api/cashier/orders',
     detail: (orderCode: string) => `/api/order/order-by-code/${orderCode}`,
+    changeStatus: (orderCode: string) => `/api/order/change-status/${orderCode}`,
   },
   checkout: {
     apply_discount: (actorId: string) => `/api/order/${actorId}/apply-discount`,
@@ -57,6 +58,7 @@ export const API_ENDPOINTS = {
   ORDER: {
     LIST: endpoints.order.list(),
     DETAIL: endpoints.order.detail,
+    CHANGE_STATUS: endpoints.order.changeStatus,
   },
   CHECKOUT: {
     APPLY_DISCOUNT: endpoints.checkout.apply_discount,

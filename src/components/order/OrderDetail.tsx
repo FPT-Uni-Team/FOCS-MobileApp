@@ -24,6 +24,7 @@ interface OrderDetailProps {
 const OrderDetail: React.FC<OrderDetailProps> = ({ orderId }) => {
   const dispatch = useDispatch();
   const { loading, order, refreshing, error } = useSelector((state: RootState) => state.orderDetail);
+
   
   const handleRefresh = useCallback(() => {
     dispatch(setRefreshing(true));

@@ -55,6 +55,10 @@ export interface OrderListState {
   params: OrderListParams;
 }
 
+export interface ChangeOrderStatusRequest {
+  status: PaymentStatus;
+}
+
 // Helper functions
 export const getOrderStatusText = (status: OrderStatus): string => {
   switch (status) {

@@ -18,8 +18,8 @@ interface OrderListProps {
 const OrderList: React.FC<OrderListProps> = ({ items, loading, refreshing, loadingMore, onRefresh, onLoadMore }) => {
   const onEndReachedCalledDuringMomentumRef = useRef(false);
 
-  const renderItem = ({ item }: { item: OrderDTO }) => <OrderListItem item={item} />;
 
+  const renderItem = ({ item }: { item: OrderDTO }) => <OrderListItem item={item} />;
   const renderFooter = () => {
     if (!loadingMore) return null;
     return <ActivityIndicator style={styles.loadingFooter} />;

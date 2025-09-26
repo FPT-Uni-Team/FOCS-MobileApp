@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
-import { Text, Surface, Chip } from 'react-native-paper';
+import React, { useState } from 'react';
+import { View, StyleSheet, Pressable, Alert } from 'react-native';
+import { Text, Surface, Chip, Button } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import StatusChip from '../common/StatusChip/StatusChip';
 import StatusDot from '../common/StatusDot/StatusDot';
@@ -14,16 +14,49 @@ import {
   getPaymentStatusText,
   getOrderStatusColor 
 } from '../../type/order/order';
+import { markOrderAsPaid } from '../../services/orderService';
 
 interface OrderListItemProps {
   item: OrderDTO;
+  onOrderUpdated?: () => void;
 }
 
-const OrderListItem: React.FC<OrderListItemProps> = ({ item }) => {
+const OrderListItem: React.FC<OrderListItemProps> = ({ item, onOrderUpdated }) => {
   const navigation = useNavigation<any>();
+  const [isMarkingPaid, setIsMarkingPaid] = useState(false);
   
   const handlePress = () => {
     navigation.navigate('OrderDetail', { orderId: item.order_code });
+  };
+
+  const handleMarkAsPaid = async () => {
+    Alert.alert(
+      'Mark as Paid',
+      `Are you sure you want to mark order ${item.order_code} as paid?`,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Mark as Paid',
+          onPress: async () => {
+                         try {
+               setIsMarkingPaid(true);
+               await markOrderAsPaid(item.order_code);
+               Alert.alert('Success', 'Order has been marked as paid!');
+               // Refresh the order list to show updated status
+               onOrderUpdated?.();
+             } catch (error) {
+              console.error('Failed to mark order as paid:', error);
+              Alert.alert('Error', 'Failed to mark order as paid. Please try again.');
+            } finally {
+              setIsMarkingPaid(false);
+            }
+          },
+        },
+      ]
+    );
   };
 
   const formatDateTime = (dateString: string) => {
@@ -121,10 +154,22 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ item }) => {
             </View>
             
             <View style={styles.actionContainer}>
-              <StatusChip
-                label={getPaymentStatusText(item.payment_status)}
-                isPositive={isPaid}
-              />
+                             <StatusChip
+                 label={getPaymentStatusText(item.payment_status)}
+                 isPositive={isPaid}
+               />
+              {!isPaid && (
+                <Button
+                  mode="contained"
+                  loading={isMarkingPaid}
+                  disabled={isMarkingPaid}
+                  onPress={handleMarkAsPaid}
+                  style={styles.markAsPaidButton}
+                  labelStyle={styles.markAsPaidButtonText}
+                >
+                  Mark as Paid
+                </Button>
+              )}
             </View>
           </View>
         </View>
@@ -244,6 +289,16 @@ const styles = StyleSheet.create({
   },
   actionContainer: {
     alignItems: 'flex-end',
+    gap: spacing.s,
+  },
+  markAsPaidButton: {
+    marginTop: spacing.s,
+    backgroundColor: Colors.success,
+    borderRadius: spacing.s,
+  },
+  markAsPaidButtonText: {
+    fontSize: 12,
+    fontWeight: '600',
   },
 });
 
