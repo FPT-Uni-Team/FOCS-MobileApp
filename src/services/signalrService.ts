@@ -5,7 +5,7 @@ import { StaffNotification } from '../type/notification/notification';
 class SignalRService {
   private connection: signalR.HubConnection | null = null;
   private store: any;
-  private disableSignalR = true;
+  private disableSignalR = false;
 
   public setStore(store: any) {
     this.store = store;

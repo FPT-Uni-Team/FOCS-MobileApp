@@ -1,37 +1,25 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { View, StyleSheet, FlatList, RefreshControl, Text } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import OrderListItem from './OrderListItem';
-import { fetchOrderListStart } from '../../store/slices/order/orderSlice';
-import { usePaginatedList } from '../../hooks/usePaginatedList';
 import type { OrderDTO } from '../../type/order/order';
 import Colors from '../../utils/Colors';
 import { spacing } from '../../utils/spacing';
 
-interface OrderListProps {}
+interface OrderListProps {
+  items: OrderDTO[];
+  loading: boolean;
+  refreshing: boolean;
+  loadingMore: boolean;
+  onRefresh: () => void;
+  onLoadMore: () => void;
+}
 
-const OrderList: React.FC<OrderListProps> = () => {
-  const {
-    data: orders,
-    loading,
-    refreshing,
-    loadingMore,
-    handleRefresh,
-    handleLoadMore,
-  } = usePaginatedList<OrderDTO>({
-    selector: (state) => ({
-      loading: state.order.loading,
-      items: state.order.items,
-      total: state.order.total,
-    }),
-    fetchAction: fetchOrderListStart,
-    initialParams: { page: 1, page_size: 10 },
-  });
+const OrderList: React.FC<OrderListProps> = ({ items, loading, refreshing, loadingMore, onRefresh, onLoadMore }) => {
+  const onEndReachedCalledDuringMomentumRef = useRef(false);
 
-  const renderItem = ({ item }: { item: OrderDTO }) => (
-    <OrderListItem item={item} onOrderUpdated={handleRefresh} />
-  );
 
+  const renderItem = ({ item }: { item: OrderDTO }) => <OrderListItem item={item} />;
   const renderFooter = () => {
     if (!loadingMore) return null;
     return <ActivityIndicator style={styles.loadingFooter} />;
@@ -46,15 +34,26 @@ const OrderList: React.FC<OrderListProps> = () => {
     );
   };
 
+  const handleEndReached = () => {
+    if (onEndReachedCalledDuringMomentumRef.current) return;
+    onEndReachedCalledDuringMomentumRef.current = true;
+    onLoadMore();
+  };
+
+  const handleMomentumScrollBegin = () => {
+    onEndReachedCalledDuringMomentumRef.current = false;
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
-        data={orders}
+        data={items}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
-        onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.5}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        onEndReached={handleEndReached}
+        onEndReachedThreshold={0.3}
+        onMomentumScrollBegin={handleMomentumScrollBegin}
         ListFooterComponent={renderFooter}
         ListEmptyComponent={renderEmpty}
         contentContainerStyle={styles.listContent}
